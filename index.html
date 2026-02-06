@@ -643,32 +643,102 @@
         </div>
     </div>
     
-    <!-- 6. [마이페이지] (업그레이드 버전) -->
+    <!-- 6. [마이페이지] (기능 구현됨) -->
     <div id="screen-mypage" class="screen" style="background:#f2f2f2;">
         
         <!-- 1. 프로필 영역 -->
         <div class="card" style="display:flex; align-items:center; padding:25px 20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3;">
             <div style="position:relative; margin-right:20px;">
-                <div style="width:64px; height:64px; background:#fff; border-radius:20px; display:flex; align-items:center; justify-content:center; border:1px solid #eee;">
-                    <i class="fas fa-user-graduate" style="font-size:32px; color:#ddd;"></i>
+                <!-- 프사 박스 (ID 추가됨) -->
+                <div id="profile-img-box" style="width:64px; height:64px; background:#fff; border-radius:20px; display:flex; align-items:center; justify-content:center; border:1px solid #eee; overflow:hidden; background-size:cover; background-position:center;">
+                    <!-- 기본 아이콘 (이미지 설정 시 사라짐) -->
+                    <i id="profile-default-icon" class="fas fa-user-graduate" style="font-size:32px; color:#ddd;"></i>
                 </div>
-                <div style="position:absolute; bottom:-5px; right:-5px; background:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; border:1px solid #eee; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;">
+                
+                <!-- 카메라 아이콘 (클릭 시 사진 변경) -->
+                <div onclick="triggerProfileUpload()" style="position:absolute; bottom:-5px; right:-5px; background:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; border:1px solid #eee; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;">
                     <i class="fas fa-camera" style="font-size:10px; color:#777;"></i>
                 </div>
             </div>
+
             <div style="flex:1;">
                 <div style="display:flex; align-items:center; margin-bottom:6px;">
-                    <h3 style="font-size:18px; font-weight:bold; margin-right:8px; color:#292929;">익명</h3>
+                    <!-- 닉네임 (ID 추가됨) -->
+                    <h3 id="profile-nickname" style="font-size:18px; font-weight:bold; margin-right:8px; color:#292929;">익명</h3>
                     <span style="font-size:10px; color:#fff; background:#c62917; padding:3px 6px; border-radius:4px; font-weight:bold;">본인인증</span>
                 </div>
                 <p style="font-size:13px; color:#888; margin-bottom:4px;">크랙 대학교</p>
                 <div style="display:flex; gap:10px;">
-                    <span style="font-size:12px; color:#aaa; border:1px solid #eee; padding:2px 8px; border-radius:12px; background:#f9f9f9; cursor:pointer;">닉네임 설정</span>
-                    <span style="font-size:12px; color:#aaa; border:1px solid #eee; padding:2px 8px; border-radius:12px; background:#f9f9f9; cursor:pointer;">프로필 사진 변경</span>
+                    <!-- 닉네임 변경 버튼 -->
+                    <span onclick="changeNickname()" style="font-size:12px; color:#aaa; border:1px solid #eee; padding:2px 8px; border-radius:12px; background:#f9f9f9; cursor:pointer;">닉네임 설정</span>
+                    <!-- 프사 변경 버튼 -->
+                    <span onclick="triggerProfileUpload()" style="font-size:12px; color:#aaa; border:1px solid #eee; padding:2px 8px; border-radius:12px; background:#f9f9f9; cursor:pointer;">프로필 사진 변경</span>
                 </div>
             </div>
         </div>
+        
+        <!-- ★ 숨겨진 파일 업로드 인풋 (화면엔 안 보임) ★ -->
+        <input type="file" id="profile-upload-input" accept="image/*" style="display: none;" onchange="handleProfileImage(this)">
 
+        <!-- 2. 커뮤니티 활동 -->
+        <div style="padding:0 20px; margin-bottom:8px; color:#888; font-size:12px; font-weight:bold;">커뮤니티</div>
+        <div class="card" style="padding:0; margin-bottom:20px;">
+            <ul style="padding:0;">
+                <li onclick="loadBoard('my', 'category')" style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <div><i class="fas fa-pencil-alt" style="width:24px; color:#c62917;"></i> 내가 쓴 글</div>
+                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
+                </li>
+                <li onclick="alert('댓글 모아보기 (준비 중)')" style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <div><i class="far fa-comment-dots" style="width:24px; color:#0ca5af;"></i> 댓글 단 글</div>
+                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
+                </li>
+                <li onclick="alert('스크랩 기능 (준비 중)')" style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <div><i class="fas fa-star" style="width:24px; color:#ffc107;"></i> 스크랩</div>
+                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 3. 계정 설정 -->
+        <div style="padding:0 20px; margin-bottom:8px; color:#888; font-size:12px; font-weight:bold;">계정</div>
+        <div class="card" style="padding:0; margin-bottom:20px;">
+            <ul style="padding:0;">
+                <li style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center;">
+                    <div><i class="fas fa-university" style="width:24px; color:#555;"></i> 학교 인증</div>
+                    <span style="font-size:12px; color:#888; font-weight:bold;">재학 인증 완료</span>
+                </li>
+                <li style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <div><i class="fas fa-lock" style="width:24px; color:#555;"></i> 비밀번호 변경</div>
+                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
+                </li>
+                <li style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <div><i class="fas fa-envelope" style="width:24px; color:#555;"></i> 이메일 설정</div>
+                    <span style="font-size:12px; color:#aaa;">student@crack.univ.ac.kr</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 4. 앱 설정 -->
+        <div class="card" style="padding:0; margin-bottom:30px;">
+            <ul style="padding:0;">
+                <li onclick="toggleDarkMode()" style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <div><i class="fas fa-moon" style="width:24px; color:#555;"></i> 다크 모드</div>
+                    <div id="dm-toggle" class="toggle-switch" style="width:40px; height:20px; background:#ddd; border-radius:10px; position:relative;">
+                        <div id="dm-circle" class="toggle-circle" style="width:16px; height:16px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; box-shadow:0 1px 2px rgba(0,0,0,0.2);"></div>
+                    </div>
+                </li>
+                <li onclick="if(confirm('정말 로그아웃 하시겠습니까?')) { alert('로그아웃 되었습니다.'); goHome(); }" style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#c62917;">
+                    <div><i class="fas fa-sign-out-alt" style="width:24px;"></i> 로그아웃</div>
+                </li>
+            </ul>
+        </div>
+        
+        <div style="text-align:center; color:#aaa; font-size:11px; margin-bottom:20px;">
+            에브리타임 이용약관 | 개인정보처리방침<br>
+            © Crack University Community
+        </div>
+    </div>
+    
         <!-- 2. 커뮤니티 활동 -->
         <div style="padding:0 20px; margin-bottom:8px; color:#888; font-size:12px; font-weight:bold;">커뮤니티</div>
         <div class="card" style="padding:0; margin-bottom:20px;">
@@ -1589,6 +1659,69 @@
         function closeMsgPopup() {
             document.getElementById('msg-detail-modal').style.display = 'none';
         }
+        // [프로필 관리 기능] (닉네임 & 프사 변경)
+
+        // 1. 닉네임 변경 함수
+        function changeNickname() {
+            const currentNick = document.getElementById('profile-nickname').innerText;
+            const newNick = prompt("변경할 닉네임을 입력하세요.", currentNick);
+            
+            if (newNick && newNick.trim() !== "") {
+                // 화면 업데이트
+                document.getElementById('profile-nickname').innerText = newNick;
+                // 저장 (새로고침 해도 유지되도록)
+                localStorage.setItem('user_nickname', newNick);
+                alert("닉네임이 변경되었습니다.");
+            }
+        }
+
+        // 2. 프사 업로드 트리거 (숨겨진 input 클릭)
+        function triggerProfileUpload() {
+            document.getElementById('profile-upload-input').click();
+        }
+
+        // 3. 이미지 파일 처리 함수
+        function handleProfileImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const imgData = e.target.result; // 이미지 데이터(Base64)
+                    
+                    // 화면 업데이트 (배경 이미지로 설정)
+                    const profileBox = document.getElementById('profile-img-box');
+                    profileBox.style.backgroundImage = `url('${imgData}')`;
+                    
+                    // 기본 아이콘 숨기기
+                    document.getElementById('profile-default-icon').style.display = 'none';
+                    
+                    // 저장 (새로고침 해도 유지되도록)
+                    localStorage.setItem('user_profile_img', imgData);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 4. 앱 실행 시 저장된 프로필 불러오기 (초기화)
+        function initProfile() {
+            // 닉네임 불러오기
+            const savedNick = localStorage.getItem('user_nickname');
+            if (savedNick) {
+                document.getElementById('profile-nickname').innerText = savedNick;
+            }
+
+            // 프사 불러오기
+            const savedImg = localStorage.getItem('user_profile_img');
+            if (savedImg) {
+                const profileBox = document.getElementById('profile-img-box');
+                profileBox.style.backgroundImage = `url('${savedImg}')`;
+                document.getElementById('profile-default-icon').style.display = 'none';
+            }
+        }
+
+        // 앱 시작 시 초기화 함수 실행
+        initProfile();
         goHome(); // 앱 시작 시 홈 화면 로드
     </script>
 </body>
