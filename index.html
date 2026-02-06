@@ -313,12 +313,46 @@
     <!-- 1. [HOME] 메인 화면 -->
     <div id="screen-home" class="screen active">
         <div class="quick-menu">
+            
             <div class="q-item" onclick="switchScreen('profiles')"><div class="q-icon"><i class="fas fa-star"></i></div><span>크랙대 네임드</span></div>
             <div class="q-item" onclick="switchScreen('cafeteria')"><div class="q-icon"><i class="fas fa-utensils"></i></div><span>오늘의 학식</span></div>
             <div class="q-item" onclick="switchScreen('calendar')"><div class="q-icon"><i class="fas fa-calendar-check"></i></div><span>학사일정</span></div>
             <div class="q-item" onclick="switchScreen('lecture')"><div class="q-icon"><i class="fas fa-book-open"></i></div><span>강의평가</span></div>
         </div>
-
+<!-- 학교 소식 (서재이 수상) -->
+      <!-- 학교 소식 (디자인 수정됨) -->
+        <div class="card">
+            <!-- 헤더: 이모지 대신 깔끔한 아이콘 사용 -->
+            <div class="section-header" style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center;">
+                    <i class="fas fa-bullhorn" style="color:#c62917; font-size:16px; margin-right:8px;"></i>
+                    <span class="section-title" style="color:#292929;">크랙대 소식</span>
+                </div>
+                <span style="font-size:11px; color:#a6a6a6; cursor:pointer;">더보기 <i class="fas fa-chevron-right" style="font-size:10px; margin-left:2px;"></i></span>
+            </div>
+            
+            <!-- 게시글 내용 -->
+            <div class="post-item" onclick="loadPost('news_jaei', 'free')" style="border-bottom:none; padding:0;">
+                <div style="display:flex; gap:15px; align-items:center;">
+                    <!-- 썸네일: 너무 쨍하지 않은 은은한 배경색 -->
+                    <div style="width:48px; height:48px; background:#f4f4f4; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#c62917; font-size:20px; flex-shrink:0;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    
+                    <div style="flex:1;">
+                        <div class="post-title" style="font-size:14px; font-weight:bold; margin-bottom:4px; line-height:1.3;">
+                            [경사] 문예창작과 서재이, '현대문학상' 신인상 최연소 수상!
+                        </div>
+                        <div class="post-desc" style="font-size:12px; color:#888; margin-bottom:4px;">
+                            심사위원 만장일치 당선... "압도적인 필력" 호평
+                        </div>
+                        <div style="font-size:11px; color:#a6a6a6;">
+                            <span style="color:#c62917; font-weight:bold;">학교본부</span> · <span>1시간 전</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
        <!-- 핫게 (목격담 + 스와핑 + 고양이 + 교수님 4개 표시) -->
         <div class="card">
             <div class="section-header"><span class="section-title" style="color:#c62917;">실시간 인기 글</span></div>
@@ -338,13 +372,13 @@
 
             <!-- 2. 스와핑 -->
             <div class="post-item" onclick="loadPost('adult_swap', 'adult')">
-                <div class="post-title" style="font-weight:bold;">CC끼리 스와핑 해본 사람 있냐? 후기 좀</div>
-                <div class="post-desc">여친이랑 나랑 둘 다 성욕 많고 좀 개방적인 편임. 술자리에서 친한 커플이랑...</div>
+                <div class="post-title" style="font-weight:bold;">CC끼리 스와핑 해본 사람 있냐?</div>
+                <div class="post-desc">남친이랑 나랑 둘 다 성욕 많고 좀 개방적인 편임. 술자리에서 친한 커플이랑...</div>
                 <div class="post-meta">
                     <span>성인게시판</span>
                     <div class="post-stats">
                         <span class="color-red"><i class="fas fa-thumbs-up"></i> 218</span>
-                        <span class="color-teal"><i class="fas fa-comment-dots"></i> 11</span>
+                        <span class="color-teal"><i class="fas fa-comment-dots"></i> 30</span>
                     </div>
                 </div>
             </div>
@@ -692,66 +726,8 @@
                     <div><i class="far fa-comment-dots" style="width:24px; color:#0ca5af;"></i> 댓글 단 글</div>
                     <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
                 </li>
-                <li onclick="alert('스크랩 기능 (준비 중)')" style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-                    <div><i class="fas fa-star" style="width:24px; color:#ffc107;"></i> 스크랩</div>
-                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
-                </li>
-            </ul>
-        </div>
-
-        <!-- 3. 계정 설정 -->
-        <div style="padding:0 20px; margin-bottom:8px; color:#888; font-size:12px; font-weight:bold;">계정</div>
-        <div class="card" style="padding:0; margin-bottom:20px;">
-            <ul style="padding:0;">
-                <li style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center;">
-                    <div><i class="fas fa-university" style="width:24px; color:#555;"></i> 학교 인증</div>
-                    <span style="font-size:12px; color:#888; font-weight:bold;">재학 인증 완료</span>
-                </li>
-                <li style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-                    <div><i class="fas fa-lock" style="width:24px; color:#555;"></i> 비밀번호 변경</div>
-                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
-                </li>
-                <li style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-                    <div><i class="fas fa-envelope" style="width:24px; color:#555;"></i> 이메일 설정</div>
-                    <span style="font-size:12px; color:#aaa;">student@crack.univ.ac.kr</span>
-                </li>
-            </ul>
-        </div>
-        
-        <!-- 4. 앱 설정 -->
-        <div class="card" style="padding:0; margin-bottom:30px;">
-            <ul style="padding:0;">
-                <li onclick="toggleDarkMode()" style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-                    <div><i class="fas fa-moon" style="width:24px; color:#555;"></i> 다크 모드</div>
-                    <div id="dm-toggle" class="toggle-switch" style="width:40px; height:20px; background:#ddd; border-radius:10px; position:relative;">
-                        <div id="dm-circle" class="toggle-circle" style="width:16px; height:16px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; box-shadow:0 1px 2px rgba(0,0,0,0.2);"></div>
-                    </div>
-                </li>
-                <li onclick="if(confirm('정말 로그아웃 하시겠습니까?')) { alert('로그아웃 되었습니다.'); goHome(); }" style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#c62917;">
-                    <div><i class="fas fa-sign-out-alt" style="width:24px;"></i> 로그아웃</div>
-                </li>
-            </ul>
-        </div>
-        
-        <div style="text-align:center; color:#aaa; font-size:11px; margin-bottom:20px;">
-            에브리타임 이용약관 | 개인정보처리방침<br>
-            © Crack University Community
-        </div>
-    </div>
-    
-        <!-- 2. 커뮤니티 활동 -->
-        <div style="padding:0 20px; margin-bottom:8px; color:#888; font-size:12px; font-weight:bold;">커뮤니티</div>
-        <div class="card" style="padding:0; margin-bottom:20px;">
-            <ul style="padding:0;">
-                <li onclick="loadBoard('my', 'category')" style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-                    <div><i class="fas fa-pencil-alt" style="width:24px; color:#c62917;"></i> 내가 쓴 글</div>
-                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
-                </li>
-                <li onclick="alert('댓글 모아보기 (준비 중)')" style="padding:16px 20px; border-bottom:1px solid #f9f9f9; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-                    <div><i class="far fa-comment-dots" style="width:24px; color:#0ca5af;"></i> 댓글 단 글</div>
-                    <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
-                </li>
-                <li onclick="alert('스크랩 기능 (준비 중)')" style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+              <!-- 기존 alert(...) 지우고 switchScreen('scrap')으로 변경 -->
+                <li onclick="switchScreen('scrap')" style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
                     <div><i class="fas fa-star" style="width:24px; color:#ffc107;"></i> 스크랩</div>
                     <i class="fas fa-chevron-right" style="color:#ddd; font-size:12px;"></i>
                 </li>
@@ -798,9 +774,24 @@
             에브리타임 이용약관 | 개인정보처리방침<br>
             © Crack University Community
         </div>
-    </div>
+        
+    </div> <!-- ★중요★ 마이페이지는 여기서 끝내야 합니다! -->
 
-    <!-- 7. [쪽지함] (팝업 기능 적용됨) -->
+    <!-- 8. [스크랩 화면] (마이페이지 밖으로 꺼냄) -->
+    <div id="screen-scrap" class="screen" style="background:white;">
+        <!-- 상단바 (뒤로가기 버튼 포함) -->
+        <div style="padding:15px; border-bottom:1px solid #eee; display:flex; align-items:center; position:sticky; top:0; background:white; z-index:10;">
+            <i class="fas fa-arrow-left" onclick="switchScreen('mypage')" style="font-size:18px; cursor:pointer; margin-right:15px;"></i>
+            <span style="font-size:16px; font-weight:bold;">스크랩 보관함</span>
+        </div>
+
+        <!-- 실제 스크랩 목록이 들어갈 공간 -->
+        <div id="scrap-container">
+            <!-- 나중에 자바스크립트로 여기에 목록을 채울 예정입니다 -->
+        </div>
+    </div>
+        
+    <!-- 5. [쪽지함] (팝업 기능 적용됨) -->
     <div id="screen-message" class="screen">
         <div class="card" style="min-height:100vh;">
             <div class="section-title" style="margin-bottom:15px;">쪽지함</div>
@@ -897,7 +888,20 @@
 
         </div>
     </div>
+<!-- 8. [스크랩 화면] (새로 추가됨) -->
+    <div id="screen-scrap" class="screen" style="background:white;">
+        <!-- 상단바 (뒤로가기 버튼 포함) -->
+        <div style="padding:15px; border-bottom:1px solid #eee; display:flex; align-items:center; position:sticky; top:0; background:white; z-index:10;">
+            <i class="fas fa-arrow-left" onclick="switchScreen('mypage')" style="font-size:18px; cursor:pointer; margin-right:15px;"></i>
+            <span style="font-size:16px; font-weight:bold;">스크랩 보관함</span>
+        </div>
 
+        <!-- 실제 스크랩 목록이 들어갈 공간 -->
+        <div id="scrap-container">
+            <!-- 나중에 자바스크립트로 여기에 목록을 채울 예정입니다 -->
+        </div>
+    </div>
+    </div>
 <!-- [글쓰기 플로팅 버튼] -->
     <div class="fab-write" onclick="toggleModal()"><i class="fas fa-pencil-alt"></i></div>
 
@@ -950,6 +954,71 @@
             posts: {}, // 객체로 변경 (ID로 바로 찾기 위해)
             boards: { 'free':[], 'secret':[], 'adult':[], 'graduate':[], 'freshman':[], 'my':[] }
         };
+        // [스크랩 데이터 - 생활 민간요법 & 기괴한 꿀팁 (건전 Ver)]
+        const scrapData = [
+            {
+                type: '생활꿀팁',
+                title: '자취방 바퀴벌레 나왔을 때 못 잡겠으면 쓰는 방법',
+                content: '바퀴벌레 위에 투명 컵 덮어놓고 굶어 죽을 때까지 기다리셈.\n대략 2주 정도 걸리는데 그동안 컵 주변에 테이프 발라놔야 됨.\n친구가 놀러 왔다가 컵 들면 대참사니까 포스트잇으로 경고문 붙여놓기 필수.'
+            },
+            {
+                type: '민간요법',
+                title: '중요한 날 얼굴 붓기 10분 만에 빼는 법 (아이돌 물 X)',
+                content: '녹차 티백 진하게 우린 물에 설탕 두 스푼 넣고 원샷 때리셈.\n맛은 좀 역겨운데 이뇨 작용 직빵이라 10분 뒤에 화장실 들락날락하면서 붓기 싹 빠짐.\n소개팅이나 증명사진 찍기 전에 무조건 해라.'
+            },
+            {
+                type: '민간요법',
+                title: '초기 감기 몸살 잡는 기괴한 방법 (콜라 끓이기)',
+                content: '쌍화탕 사러 나가기 귀찮을 때 콜라에 생강이나 마늘 넣고 끓여 마시셈.\n서양 민간요법인데 몸에서 열 확 오르면서 땀 빠지고 감기 떨어짐.\n주의: 냄비 닦기 힘드니까 엄마 몰래 버릴 냄비에 해라.'
+            },
+            {
+                type: '피부관리',
+                title: '왕여드름 났을 때 직빵으로 잠재우는 법',
+                content: '다 필요 없고 생마늘 슬라이스 해서 여드름 위에 5분만 올려놓으셈.\n진짜 살 타는 고통 느껴지는데 다음날 보면 여드름균 다 뒤져서 납작해져 있음.\n피부 예민하면 하지 마라. 화상 입는다.'
+            },
+            {
+                type: '학교생활',
+                title: '교수님한테 안 걸리고 출튀하는 동선 (공학관)',
+                content: '공학관 302호 뒷문 개구멍 있는데 거기로 기어 나가면 CCTV 사각지대임.\n근데 나가다가 청소 아주머니랑 마주치면 그냥 청소 돕는 척 빗자루 들어라.\n나 저번에 걸려서 30분 동안 복도 쓸고 옴.'
+            },
+            {
+                type: '민간요법',
+                title: '딸꾹질 안 멈출 때 100% 멈추는 자세 (인사하기)',
+                content: '물 한 컵 떠놓고 허리를 90도로 숙여서 인사하는 자세로 물 마셔봐.\n기도가 열리면서 식도 자극돼서 딸꾹질 바로 멈춤.\n단점: 휴게실에서 하면 미친 사람 취급받음. 몰래 해라.'
+            }
+        ];
+
+       // [스크랩 목록을 화면에 그려주는 함수] (줄바꿈 에러 수정판)
+        function loadScraps() {
+            const container = document.getElementById('scrap-container');
+            container.innerHTML = ''; 
+
+            scrapData.forEach(item => {
+                let icon = '<i class="fas fa-lightbulb" style="color:#ffb142;"></i>'; 
+                if(item.type.includes('19') || item.type.includes('성인')) {
+                    icon = '<i class="fas fa-exclamation-circle" style="color:#c62917;"></i>'; 
+                } else if(item.type.includes('민간요법')) {
+                    icon = '<i class="fas fa-leaf" style="color:#2ecc71;"></i>'; 
+                }
+
+                // ★ 수정된 부분: 줄바꿈(\n) 때문에 에러가 나지 않도록 안전하게 변환
+                // 내용에 있는 \n을 <br>로 바꾸거나, 이스케이프 문자로 처리해야 함
+                // 여기서는 팝업에 띄우기 위해 문자열 안의 \n을 안전하게 처리함
+                const safeContent = item.content.replace(/\n/g, '\\n').replace(/"/g, '&quot;');
+
+                let html = `
+                <div onclick="openMsgPopup('${item.type}', '보관됨', '${safeContent}')" style="padding:15px; border-bottom:1px solid #f2f2f2; display:flex; gap:15px; cursor:pointer;">
+                    <div style="width:40px; height:40px; background:#f9f9f9; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                        ${icon}
+                    </div>
+                    <div>
+                        <div style="font-size:14px; font-weight:bold; margin-bottom:5px; line-height:1.4;">${item.title}</div>
+                        <div style="font-size:12px; color:#888;">${item.type} · 저장된 글</div>
+                    </div>
+                </div>`;
+                container.innerHTML += html;
+            });
+        }
 
         // ★ 수정된 함수: 게시판 분류와 '내가 쓴 글' 분류를 동시에 처리합니다.
        // ★ 수정된 함수: 방금 쓴 글은 맨 위로(unshift), 기존 글은 순서대로(push)
@@ -1017,6 +1086,18 @@
         createPost('my_4', "지금 남친이랑 있어도 전남친 생각나는 내가 싫다", "지금 사람은 이렇게 잘해주는데...\n왜 자꾸 그 새끼가 생각나지? 술 마시고 전화할 뻔했다 진짜.", "비밀게시판", 15, [{nick:"익명1", text:"정리해라."}], true);
 
         // 3. [자유게시판 글들] (ID 순서 정리완료 + 고양이 추가)
+        // [학교 소식] - 서재이 문학상 수상
+        createPost('news_jaei', "[경사] 문예창작과 3학년 서재이, 제42회 현대문학상 신인상 수상", 
+            "우리 대학 문예창작과 3학년에 재학 중인 서재이 학우가 국내 최고 권위의 '현대문학상' 소설 부문 신인상을 수상했습니다.\n\n심사위원단은 \"기성 작가들을 뛰어넘는 압도적인 문장력과 냉소적이면서도 탐미적인 서사가 돋보인다\"며 만장일치로 당선을 결정했습니다.\n\n[수상 소감]\n\"별로 할 말 없습니다. 상금은 동아리 회식비로 쓰겠습니다.\"\n\n자랑스러운 크랙인 서재이 학우의 수상을 진심으로 축하드립니다.", 
+            "학교소식", 854, [
+                {nick:"익명1", text:"와 미친 현대문학상이면 등단 아니냐? 클라스 돌았네"},
+                {nick:"익명2", text:"서영락 시인 아들이라더니 유전자가 다르긴 하구나.."},
+                {nick:"익명3", text:"수상 소감 ㅋㅋㅋㅋㅋ '할 말 없음' ㅋㅋㅋㅋㅋ 서재이답다"},
+                {nick:"익명4", text:"얼굴도 잘생겼는데 글도 잘 쓰면 반칙 아님? 신은 불공평하다"},
+                {nick:"익명5", text:"동아리 회식비 미쳤다 ㅋㅋㅋ 이단아 들어가고 싶다"},
+                {nick:"익명6", text:"수업 시간에 맨날 자는 거 같더니 상을 타오네; 천재는 다르다"}
+            ]);
+        let historyStack = [];
         createPost('free_1', "아 시발 전필 교수 개새끼가 과제 또 냄", "중간고사 끝난 지 얼마나 됐다고 레포트 10장... 이 교수 거르셈.", "자유게시판", 55, [{nick:"익명1", text:"김교수? ㅋㅋㅋ"}, {nick:"익명2", text:"휴학 마렵다"}]);
         
         createPost('free_2', "중도에서 발정 난 커플 새끼들아 모텔을 가", "책상 밑에서 손 잡고 허벅지 만지고 지랄 났네.", "자유게시판", 32, [{nick:"익명1", text:"ㅇㅈ 도서관이 모텔이냐"}]);
@@ -1029,12 +1110,81 @@
                 {nick:"익명3", text:"근데 피지컬 보면 반박 불가임.. 냄새난다고 했다간 접어버릴 것 같음"},
                 {nick:"익명4", text:"강의실 들어오시면 공기 질감이 달라짐 ㅋㅋㅋ 묵직해짐"}
             ]);
+            // [서재이 목격담 1] - 비주얼 & 흡연 구역 화보
+        createPost('free_jaei_1', "예대 흡연 구역 서재이 미쳤네... 영화 찍냐?", 
+            "지나가다 봤는데 올블랙 입고 담배 피우는데 퇴폐미 ㅈ된다 진짜.\n연기 뱉으면서 허공 보는데 무슨 사연 있는 느와르 주인공인 줄.\n\n근데 가까이서 보니까 손 개크고 손가락 진짜 길더라.\n저 손으로 글 쓰면 원고지 찢어지는 거 아님? \n와꾸가 복지다 진짜...", 
+            "자유게시판", 342, [
+                {nick:"익명1", text:"ㄹㅇ 문창과 탑은 얼굴로 뽑는다는 게 학계의 정설"},
+                {nick:"익명2", text:"성격이 개차반이라 그렇지 얼굴은 까면 안 됨"},
+                {nick:"익명3", text:"저 형 저러고 머릿속으로 '점심 뭐 먹지' 생각하고 있었을걸 ㅋㅋㅋ"},
+                {nick:"익명4", text:"손 진짜 섬섬옥수임.. 핏줄 선 거 봐 하.."}
+            ]);
+
+        // [서재이 목격담 2] - 엉뚱한 독서 취향 (웹소설 분석)
+        createPost('free_jaei_2', "중도에서 서재이 봤는데 존나 심각하게 책 읽길래", 
+            "뭐 엄청난 인문학 원서 읽나 해서 뒤에서 슬쩍 봤거든?\n근데 <재벌집 망나니가 회귀했다> 이거 읽고 있더라 ㅋㅋㅋㅋ\n\n표정은 무슨 순수이성비판 분석하는 칸트마냥 진지해서 개웃겼음.\n중얼거리는 거 들어보니까 '여기서 개연성이 무너지네.. 작가의 필력이 아쉽군' 이러고 앉아있음.\n진짜 알다가도 모를 인간임.", 
+            "자유게시판", 215, [
+                {nick:"익명1", text:"미친 ㅋㅋㅋㅋ 활자 중독이라더니 진짜 아무거나 다 읽는구나"},
+                {nick:"익명2", text:"나 저번에 서재이가 판타지 소설 보면서 우는 거 봄"},
+                {nick:"익명3", text:"교수님이 알면 뒷목 잡으시겠네 ㅋㅋㅋ"},
+                {nick:"익명4", text:"근데 서재이가 분석하면 그 양산형 소설도 문학이 될 것 같음"}
+            ]);
+
+        // [서재이 목격담 3] - 유저와의 묘한 기류 (질투 유발)
+        createPost('free_jaei_3', "야 방금 서재이 옆에 있는 여자 누구임?? (충격)", 
+            "원래 서재이 사람 취급 안 하고 투명 인간 보듯이 지나가잖아.\n근데 방금 후문 쪽에서 어떤 여자애 가방 끈 고쳐 매주던데?\n\n심지어 웃고 있었음. 비웃는 거 아니고 진짜 장난스럽게 웃는 거.\n내가 입학하고 서재이 표정 변화 처음 봄.\n여친임? 분위기 묘하던데 누구 아는 사람?", 
+            "자유게시판", 489, [
+                {nick:"익명1", text:"??? 서재이가?? 가방을?? 헛것 본 거 아님?"},
+                {nick:"익명2", text:"와.. 그 여자애 살아있냐? 서재이 성격 받아주는 사람이 있네"},
+                {nick:"익명3", text:"누구냐.. 전생에 나라를 구했네"},
+                {nick:"익명4", text:"그냥 장난감처럼 데리고 노는 거 아님? 걔 성격 알잖아"},
+                {nick:"글쓴이", text:"아니야.. 눈빛이 찐이었어. 잡아먹을 듯이 보던데."}
+            ]);
+
+        // [서재이 목격담 4] - 재력 & 펜트하우스
+        createPost('free_jaei_4', "서재이 집 어디냐? 방금 벤틀리 타고 가던데", 
+            "학교 앞에서 검은색 세단 뒷좌석 타는 거 봄.\n기사님이 문 열어주던데 재벌 3세였음??\n아빠가 시인이라 들었는데 그 정도로 금수저였냐.. \n인생 혼자 사네 시발.. 부럽다.", 
+            "자유게시판", 120, [
+                {nick:"익명1", text:"걔네 아빠가 그 서영락 시인이잖아. 인세만 해도 빌딩 세울걸?"},
+                {nick:"익명2", text:"저번에 보니까 학교 앞 랜드마크 펜트하우스로 들어가더라"},
+                {nick:"익명3", text:"근데 맨날 학식 먹고 다니길래 돈 없는 줄 알았음 ㅋㅋㅋ"},
+                {nick:"익명4", text:"가진 자의 여유지.. 우리랑은 차원이 다름"}
+            ]);
 
         createPost('free_4', "흡연 구역 침 좀 그만 뱉어라", "바닥이 침으로 한강이다 더러워 죽겠네.", "자유게시판", 78, []);
         
         createPost('free_5', "강단우 오늘 밴드부 공연 하냐? 시끄럽네", "학생회관 지나가는데 베이스 소리 둥둥 울려서 머리 아픔.", "자유게시판", 14, [{nick:"익명1", text:"키보드 강단우 아님? 실력은 인정이지"}]);
         
         createPost('free_6', "오늘 학식 돈가스 거르셈", "튀김옷만 두꺼움.", "자유게시판", 4, []);
+        // [윤세아 목격담 1] - 비주얼(냉미녀 & 슬렌더 글래머) 찬양
+        createPost('free_seah_1', "간호대 윤세아 실물 영접했는데 분위기 미쳤다...", 
+            "오늘 병원 실습 가는 거 봤는데 올블랙 가죽 재킷에 칼단발...\n와 피부가 무슨 백지장처럼 하얗더라. 뱀파이어인 줄.\n\n근데 몸매가 진짜 사기임. 엄청 마르셨는데 나올 데는 다 나왔음(ㄷㄷ)\n말 걸어보고 싶었는데 표정이 너무 차가워서 얼어 죽을 뻔했다.\n이게 그 '냉미녀'의 정석이냐?", 
+            "자유게시판", 287, [
+                {nick:"익명1", text:"윤세아는 건드리면 안 됨. 멘탈이 강철이라 상처 하나 안 받을걸?"},
+                {nick:"익명2", text:"주량 소주 3병이라던데 ㅋㅋㅋ 술자리에서 흐트러진 거 본 사람이 없음"},
+                {nick:"익명3", text:"간호대 수석이잖아. 머리도 좋고 얼굴도 예쁘고 세상 불공평하네"},
+                {nick:"익명4", text:"저런 분한테 주사 맞으면 안 아플 듯... 제발 놔주세요"}
+            ]);
+
+        // [윤세아 목격담 2] - 서재이와의 관계 (팩트 폭격)
+        createPost('free_seah_2', "서재이 털리는 거 봄 ㅋㅋㅋ 윤세아한테 꼼짝도 못 하네", 
+            "동아리방 앞에서 둘이 얘기하는 거 들었는데 ㅋㅋㅋ\n윤세아가 서재이한테 '서재이, 간 수치 쓰레기니까 술 작작 마셔. 객사하기 싫으면.' 이러면서 무표정으로 팩폭 날림.\n\n근데 서재이는 그거 듣고 그냥 실실 웃더라.\n윤세아가 연하인데 반말 까고 훈계하는 거 보니까 서열이 딱 보임.\n서재이 담당 일진은 윤세아가 맞는 듯.", 
+            "자유게시판", 198, [
+                {nick:"익명1", text:"둘이 진짜 상극인데 붙여놓으면 케미 쩔음 ㅋㅋㅋ"},
+                {nick:"익명2", text:"건강 챙겨주는 거 봐라... 방식이 좀 살벌해서 그렇지 착하네"},
+                {nick:"익명3", text:"윤세아 ISTP라던데 ㅋㅋㅋ 감정 없이 팩트만 조지는 거 개웃김"},
+                {nick:"익명4", text:"서재이가 유일하게 봐주는 게 윤세아임. 다른 애였으면 무시하고 갔을걸"},
+                
+                // [반박 1] 서재이가 요즘 꽂힌 애(유저)가 있다
+                {nick:"익명5", text:"ㄴ 아님 업데이트 좀 해라 ㅋㅋㅋ 요즘 서재이 꽂힌 애 따로 있음. 교양 같이 듣는 걔한테 장난치고 난리도 아니던데?"},
+                {nick:"익명6", text:"ㄹㅇ 나도 봄. 윤세아한테는 그냥 '아 예~' 이런 느낌이면 걔한테는 눈이 번들거림;; 집착 쩔 듯"},
+                
+                // [반박의 반박] 걔는 강단우 여친 아니냐? (★요청하신 부분★)
+                {nick:"익명7", text:"??? 야 잠깐만. 니들이 말하는 그 여자애, 소웨과 강단우 여친 아님??"},
+                {nick:"익명8", text:"맞음 ㅋㅋㅋ 강단우랑 맨날 붙어다니는 걔. 공식 커플이잖아."},
+                {nick:"익명9", text:"와 미친... 그럼 서재이가 친구 여친 건드리는 거임? 콩가루 집안이네 ㅋㅋㅋ"},
+                {nick:"익명10", text:"개재밌네 ㅋㅋㅋ 강단우 성격 개빡센데 알면 가만 안 있을 듯. 전쟁각이다"}
+            ]);
         
         createPost('free_7', "버스 막차 몇 시야?", "도서관에서 밤샘하고 집 가려는데.", "자유게시판", 1, [{nick:"익명1", text:"11시 30분이 막차임."}]);
         
@@ -1125,22 +1275,41 @@
         createPost('secret_9', "짝사랑 포기하는 법 좀", "계속 생각나서 미치겠어.", "비밀게시판", 11, []);
         createPost('secret_10', "학교 앞 모텔 대실 시간 긴 곳 추천", "3시간 너무 짧아.", "비밀게시판", 0, []);
 
-       // 5. [성인게시판] (19금 리얼 버전)
-        createPost('adult_swap', "CC끼리 스와핑 해본 사람 있냐? 후기 좀", 
-            "여친이랑 나랑 둘 다 성욕 많고 좀 개방적인 편임.\n술자리에서 친한 커플이랑 농담 따먹기 하다가 분위기가 그쪽으로 흘러갔는데...\n\n진짜로 해본 사람 있음?\n하고 나서 어색해지냐 아니면 더 끈끈해지냐?\n\n내 판타지긴 한데 막상 하려니까 후폭풍 걱정되네.\n경험자 형님들 조언 부탁한다. 욕은 사절.", 
+   // [성인게시판] (19금 리얼 버전 - 여자 글쓴이 Ver)
+        createPost('adult_swap', "CC끼리 스와핑 해본 사람 있냐? (여자임)", 
+            "남친이랑 나랑 둘 다 성욕 많고 좀 개방적인 편임.\n술자리에서 친한 커플이랑 농담 따먹기 하다가 분위기가 그쪽으로 흘러갔는데...\n\n진짜로 해본 사람 있음?\n하고 나서 어색해지냐 아니면 더 끈끈해지냐?\n\n내 판타지긴 한데 막상 하려니까 후폭풍 걱정되네.\n경험자 언니오빠들 조언 부탁해. 욕은 사절.", 
             "성인게시판", 218, [
                 {nick:"익명1", text:"와.. 우리 학교 수준 실화냐? 동물의 왕국이네 ㅋㅋㅋ"},
-                {nick:"익명2", text:"하지 마라. 인간의 질투심을 무시하지 마. 쿨한 척하다가 칼부림 난다."},
-                {nick:"익명3", text:"내 아는 형네 커플이 했는데, 결국 파트너 체인지 돼서 새롭게 사귐 ㅋㅋ"},
-                {nick:"익명4", text:"상대 커플 수질이 중요함. 니 여친보다 상대가 예쁘면 넌 개이득인데, 니 여친은 현타 옴."},
-                {nick:"글쓴이", text:"상대방 남자애가 나보다 피지컬 좋아서 그게 좀 걱정이긴 해.. 여친 뺏길까 봐."},
-                {nick:"익명6", text:"ㄴ ㅋㅋㅋㅋ 뺏기면 뺏기는 거지 뭐. 쫄리면 하지 마"},
-                {nick:"익명7", text:"쓰리썸까진 해봤는데 스와핑은 멘탈 털릴 듯. 남이 내 거 박는 거 눈앞에서 보는 게 쉽지 않음."},
+                {nick:"익명2", text:"하지 마. 여자는 하고 나면 현타 오는데 남자는 그냥 새로운 여자랑 해서 좋다고 생각함."},
+                {nick:"익명3", text:"내 아는 언니네 커플이 했는데, 결국 파트너 체인지 돼서 새롭게 사귐 ㅋㅋ"},
+                {nick:"익명4", text:"상대 커플 수질이 중요함. 니 남친보다 상대 남자가 잘생기면 넌 개이득인데, 니 남친이 딴 여자한테 꽂히면 끝임."},
+                {nick:"글쓴이", text:"상대방 여자애가 나보다 몸매 좋고 글래머라서 그게 좀 걱정이긴 해.. 남친 눈 돌아갈까 봐."},
+                {nick:"익명6", text:"ㄴ 야 그럼 절대 하지 마. 남자들 시각에 약해서 가슴 크면 눈 돌아간다."},
+                {nick:"익명7", text:"쓰리썸까진 해봤는데 스와핑은 멘탈 털릴 듯. 남친이 딴 년이랑 뒹구는 거 눈앞에서 본다고? 난 못 함."},
                 {nick:"익명8", text:"후기 꼭 남겨라. 와드 박고 간다."},
-                {nick:"익명9", text:"성병 검사지 서로 교환하고 해라. 기본 매너다."},
+                {nick:"익명9", text:"성병 검사지 서로 교환하고 해. 기본 매너다."},
                 {nick:"익명10", text:"부럽다 시발.. 나도 그런 마인드인 여친 만나고 싶다.."},
-                {nick:"익명11", text:"야 쪽지 봐라. 진지하게 물어볼 거 있음."}
-            ]);
+                {nick:"익명11", text:"야 쪽지 봐봐. 진지하게 물어볼 거 있음."},
+                {nick:"익명12", text:"근데 CC면 학교에서 계속 마주칠 텐데 감당 가능함? 전공 수업 때 눈 마주치면 어쩔?"},
+                {nick:"글쓴이", text:"안 그래도 그게 제일 걸림. 걔네랑 같은 동아리라.."},
+                {nick:"익명14", text:"미친년아 동아리면 절대 하지 마 ㅋㅋㅋ 소문나면 니네 넷 다 매장이야."},
+                {nick:"익명15", text:"상대방 남자애는 어때? 피지컬 좋음?"},
+                {nick:"글쓴이", text:"체대생이라 몸 좋고 잘생김.. 솔직히 내 남친보다 피지컬은 더 좋아."},
+                {nick:"익명17", text:"ㄴ ㅋㅋㅋㅋ 너도 즐길 준비 됐네 뭐. 그냥 질러."},
+                {nick:"익명18", text:"이거 완전 망가 도입부 아니냐? 남친은 뺏기고 너는 체대남한테 함락당하는 스토리."},
+                {nick:"익명19", text:"한 번이 어렵지 두 번은 쉽다. 판도라의 상자 까지 마라."},
+                {nick:"익명20", text:"나 해봤는데 룰 정하고 해. 키스 금지, 안에 싸기 금지, 끝나고 서로 안아주기 이런 거."},
+                {nick:"익명21", text:"질투 안 날 자신 있음? 니 남친이 그 글래머 언니 가슴 만지면서 좋아하는 표정 봐도 괜찮음?"},
+                {nick:"글쓴이", text:"상상하면 꼴리긴 하는데 막상 보면 눈물 날 거 같기도 하고.. 복잡하네."},
+                {nick:"익명23", text:"그냥 모텔방 두 개 잡고 따로 해. 한 방에서 넷이 하는 건 난이도 헬임."},
+                {nick:"익명24", text:"와 세상 말세다 말세야.. 부모님이 니들 이러는 거 아시냐?"},
+                {nick:"익명25", text:"ㄴ 씹선비 등판했누 ㅋㅋㅋ 성인게시판에서 훈장질 ㄴㄴ"},
+                {nick:"익명26", text:"후기 안 남기면 3대가 대머리."},
+                {nick:"익명27", text:"근데 상대 커플도 동의한 거임? 남자들끼리만 신난 거 아니고?"},
+                {nick:"글쓴이", text:"술 먹고 넷이 왕게임하다가 수위 세져서 합의된 거야. 그쪽 여자애도 싫지 않은 눈치던데."},
+                {nick:"익명29", text:"남친 간수 잘해라. 몸정 무섭다."},
+                {nick:"익명30", text:"조만간 '스와핑하다가 남친 뺏겼어요' 글 올라오겠네 ㅋㅋㅋ"}
+            ], false, true);
         createPost('adult_1', "오늘 밤 외로운 여학우 구함 (181/76 훈남)", 
             "키 크고 운동해서 몸 좋습니다. 술 강요 안 하고 매너 있게 모십니다.\n서로 끌리면 2차 가고 아니면 깔끔하게 술만 먹고 헤어짐.\n쪽지 주세요. 프로필 인증 가능.", 
             "성인게시판", 8, [
@@ -1378,21 +1547,20 @@
                 {nick:"익명2", text:"아직 3월이다 걱정 마라"}, 
                 {nick:"익명3", text:"자발적 아싸가 편하다 나중엔 알게 될 거임"}
             ]);
-        
-        let historyStack = [];
-
-        function switchScreen(screenId) {
+    
+       function switchScreen(screenId) {
             // 1. 하단 탭바 아이콘 색상 변경
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             
-            // 홈
             if(screenId === 'home') document.querySelectorAll('.nav-item')[0].classList.add('active');
-            // 게시판 (카테고리 목록)
             if(screenId === 'board-category') document.querySelectorAll('.nav-item')[1].classList.add('active');
-            // 쪽지함
             if(screenId === 'message') document.querySelectorAll('.nav-item')[2].classList.add('active');
-            // 내 정보
             if(screenId === 'mypage') document.querySelectorAll('.nav-item')[3].classList.add('active');
+
+            // ★ 추가된 부분: 스크랩 화면으로 갈 때 데이터 로딩 실행
+            if (screenId === 'scrap') {
+                loadScraps();
+            }
 
             // 2. 화면 전환 (보여주기/숨기기)
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1402,21 +1570,27 @@
             const subHeader = document.getElementById('sub-header');
             const fab = document.querySelector('.fab-write');
 
-            // 3. 헤더 모양 결정 (메인헤더 vs 서브헤더)
-            // 홈, 쪽지, 내정보, 게시판카테고리 화면에서는 '메인 헤더'를 보여줌
+            // 3. 헤더 모양 결정
             if (screenId === 'home' || screenId === 'message' || screenId === 'mypage' || screenId === 'board-category') {
+                // 메인 화면들: 로고 헤더 보임
                 mainHeader.style.display = 'flex';
                 subHeader.style.display = 'none';
                 fab.style.display = 'flex'; // 글쓰기 버튼 보임
-            } else {
-                // 게시판 글 목록, 글 상세 화면에서는 '뒤로가기 헤더'를 보여줌
+            } 
+            else if (screenId === 'scrap') {
+                // ★ 추가된 부분: 스크랩 화면은 자체 헤더가 있으므로 둘 다 숨김
+                mainHeader.style.display = 'none';
+                subHeader.style.display = 'none';
+                fab.style.display = 'none';
+            } 
+            else {
+                // 게시판/글읽기 화면: 뒤로가기 헤더 보임
                 mainHeader.style.display = 'none';
                 subHeader.style.display = 'flex';
                 fab.style.display = 'none'; // 글쓰기 버튼 숨김
             }
             window.scrollTo(0, 0);
         }
-
         // 홈으로 가기 (초기화)
         function goHome() {
             historyStack = [];
