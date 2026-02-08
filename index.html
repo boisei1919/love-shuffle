@@ -1,33 +1,400 @@
-/* --- [수정] 글쓰기 버튼 클릭 시: 모든 게시판 목록 생성 및 현재 게시판 자동 선택 --- */
-document.querySelector('.write-btn').onclick = function() {
-    // 1. 화면 전환
-    views.boardDetail.classList.add('hidden');
-    views.write.classList.remove('hidden');
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>크랙타임 - 크랙대학교</title>
+    <!-- 아이콘 사용을 위한 FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* [초기화 및 변수 설정] */
+        :root {
+            --main-blue: #2962FF; /* 크랙타임 메인 컬러 (파랑) */
+            --bg-gray: #f2f2f2;
+            --border-color: #e3e3e3;
+            --text-black: #292929;
+            --text-gray: #737373;
+            --text-light-gray: #a6a6a6;
+        }
 
-    // 2. 전체 게시판 목록 정의 (여기에 있는 것만 선택 가능)
-    const allBoards = [
-        "자유게시판", "비밀게시판", "졸업생게시판", "새내기게시판",
-        "장터게시판", "원룸/주거", "알바/과외", "분실물",
-        "연애상담",
-        "취업/진로", "홍보게시판", "동아리/학회", "대외활동",
-        "총학생회", "방송국", "공과대학", "인문대학"
-    ];
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+        }
 
-    // 3. 선택창(Select) 비우고 다시 채우기
-    const selectEl = document.getElementById('write-board-select');
-    selectEl.innerHTML = ""; // 기존 옵션 초기화
+         body {
+            background-color: #f0f0f0; /* 배경을 회색으로 (PC에서 앱 구분 쉽게) */
+            display: flex;             /* 플렉스 박스 사용 */
+            justify-content: center;   /* 가로 중앙 정렬 */
+            min-height: 100vh;         /* 세로 꽉 차게 */
+            margin: 0;
+        }
 
-    allBoards.forEach(boardName => {
-        const option = document.createElement('option');
-        option.value = boardName;
-        option.innerText = boardName;
-        selectEl.appendChild(option);
-    });
 
-    // 4. 현재 보고 있던 게시판(currentBoardName)을 기본값으로 선택
-    if (currentBoardName && allBoards.includes(currentBoardName)) {
-        selectEl.value = currentBoardName;
-    } else {
-        selectEl.value = "자유게시판"; // 기본값
-    }
-};
+        .app-container {
+            width: 100%;
+            max-width: 420px; /* 모바일 너비 고정 (PC에서 너무 퍼지지 않게) */
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); /* 살짝 그림자 줘서 입체감 */
+            min-height: 100vh;
+            margin: 0 auto;   /* 혹시 모르니 자체 중앙 정렬 추가 */
+            padding-bottom: 60px;
+        }
+
+        /* [모바일 앱 컨테이너] */
+        .app-container {
+            width: 100%;
+            max-width: 420px; /* 모바일 너비 제한 */
+            background-color: #fff;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            padding-bottom: 60px; /* 하단 네비게이션 공간 */
+        }
+
+        /* [상단 헤더] */
+        header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: var(--main-blue);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .header-icons i {
+            font-size: 20px;
+            color: #333;
+            margin-left: 15px;
+            cursor: pointer;
+        }
+
+        /* [메인 섹션 공통] */
+        .section {
+            padding: 20px;
+            border-bottom: 8px solid var(--bg-gray);
+        }
+
+        /* [빠른 메뉴 그리드] */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4열 */
+            gap: 15px;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(41, 98, 255, 0.1); /* 파란색 배경 연하게 */
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .icon-box i {
+            font-size: 22px;
+            color: var(--main-blue); /* 아이콘 파란색 */
+        }
+
+        .menu-text {
+            font-size: 11px;
+            color: var(--text-black);
+        }
+
+        /* [배너] */
+        .banner {
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(90deg, #6c9eff, #2962FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* [게시판 카드 위젯] */
+        .board-card {
+            margin-bottom: 10px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-black);
+        }
+
+        .more-btn {
+            font-size: 12px;
+            color: var(--main-blue); /* 더보기 버튼 파란색 */
+            font-weight: bold;
+        }
+
+        .post-list li {
+            list-style: none;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .post-title {
+            font-size: 14px;
+            color: var(--text-black);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .post-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-light-gray);
+        }
+
+        .post-status {
+            color: var(--main-blue);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .hot-icon {
+            color: var(--main-blue);
+            font-size: 10px;
+            margin-right: 3px;
+        }
+
+        /* [하단 네비게이션] */
+        nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            height: 60px;
+            background: #fff;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #c4c4c4;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--text-black); /* 활성화된 탭 검정색 */
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .nav-text {
+            font-size: 9px;
+        }
+
+        /* [크랙대학교 로고 부분] */
+        .univ-title {
+            font-size: 12px;
+            color: var(--text-gray);
+            padding: 10px 20px 0;
+        }
+        
+        .univ-name {
+            font-size: 22px;
+            font-weight: 800;
+            padding: 5px 20px 15px;
+            color: var(--text-black);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- 상단 헤더 -->
+        <header>
+            <div class="logo">
+                <span>Cracktime</span>
+                크랙대
+            </div>
+            <div class="header-icons">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <i class="fa-regular fa-user"></i>
+            </div>
+        </header>
+
+        <!-- 학교 이름 영역 -->
+        <div class="univ-title">멘탈이 깨지는 학교</div>
+        <div class="univ-name">크랙대학교</div>
+
+        <!-- 메뉴 아이콘 그리드 -->
+        <div class="section" style="border-bottom: none; padding-bottom: 0;">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <span class="menu-text">학교홈</span>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                    <span class="menu-text">열람실</span>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-solid fa-star"></i></div>
+                    <span class="menu-text">강의평가</span>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
+                    <span class="menu-text">공지사항</span>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-regular fa-calendar-check"></i></div>
+                    <span class="menu-text">학사일정</span>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-solid fa-utensils"></i></div>
+                    <span class="menu-text">오늘의학식</span>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-solid fa-building-columns"></i></div>
+                    <span class="menu-text">도서관</span>
+                </div>
+                <div class="menu-item">
+                    <div class="icon-box"><i class="fa-solid fa-ellipsis"></i></div>
+                    <span class="menu-text">더보기</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 배너 -->
+        <div class="banner">
+            📢 2026학년도 크랙대 자퇴 신청 기간 안내
+        </div>
+
+        <!-- 게시판 위젯 -->
+        <div class="section">
+            <div class="board-card">
+                <div class="card-header">
+                    <span class="card-title">실시간 인기 글</span>
+                    <span class="more-btn">더보기</span>
+                </div>
+                <ul class="post-list">
+                    <li>
+                        <div class="post-title">아니 교수님 이게 말이 됩니까? 과제가 3개라니</div>
+                        <div class="post-info">
+                            <span>익명</span>
+                            <span><i class="fa-solid fa-thumbs-up hot-icon"></i> 152 <i class="fa-regular fa-comment-dots hot-icon"></i> 42</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="post-title">크랙대 정문 앞 맛집 추천 받는다 (시멘트 덮밥 X)</div>
+                        <div class="post-info">
+                            <span>익명</span>
+                            <span><i class="fa-solid fa-thumbs-up hot-icon"></i> 89 <i class="fa-regular fa-comment-dots hot-icon"></i> 21</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="board-card">
+                <div class="card-header">
+                    <span class="card-title">자유게시판</span>
+                    <span class="more-btn">더보기</span>
+                </div>
+                <ul class="post-list">
+                    <li>
+                        <div class="post-title">1교시 자체휴강한 사람? 저요~</div>
+                        <div class="post-info"><span>10분 전</span><span>익명</span></div>
+                    </li>
+                    <li>
+                        <div class="post-title">오늘 학식 메뉴 뭐나옴?</div>
+                        <div class="post-info"><span>23분 전</span><span>익명</span></div>
+                    </li>
+                    <li>
+                        <div class="post-title"><span class="post-status">질문</span> 님들 졸업하면 취업 가능함?</div>
+                        <div class="post-info"><span>35분 전</span><span>익명</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="board-card">
+                <div class="card-header">
+                    <span class="card-title">장터게시판</span>
+                    <span class="more-btn">더보기</span>
+                </div>
+                <ul class="post-list">
+                    <li>
+                        <div class="post-title">전공 책 팝니다 (눈물자국 조금 있음)</div>
+                        <div class="post-info"><span>1시간 전</span><span>익명</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 하단 네비게이션 -->
+         <nav>
+            <div class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                <span class="nav-text">홈</span>
+            </div>
+            <!-- 시간표 삭제됨 -->
+            <div class="nav-item">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span class="nav-text">게시판</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-regular fa-bell"></i>
+                <span class="nav-text">알림</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-tent"></i>
+                <span class="nav-text">캠퍼스픽</span>
+            </div>
+        </nav>
+    </div>
+
+</body>
+</html>
