@@ -813,6 +813,15 @@
             <span class="board-name">분실물 신고</span>
         </div>
     </section>
+    
+    <!-- 2.5 연애 & 고민 (새로 추가) -->
+    <div class="board-group-title">연애 & 고민</div>
+    <section class="board-list-container">
+        <div class="board-row" onclick="openBoard('연애상담')">
+            <span class="board-name">연애상담</span>
+            <span class="new-badge"></span> <!-- 새 글 표시 -->
+        </div>
+    </section>
 
     <!-- 3. 진로 & 홍보 -->
     <div class="board-group-title">진로 & 홍보</div>
@@ -898,15 +907,16 @@
         </div>
 
         <!-- 액션 버튼 (공감/스크랩) -->
+        <!-- ★ 아래 div 태그가 빠져서 버튼이 깨진 겁니다! 꼭 넣어주세요 ★ -->
         <div class="post-action-buttons">
-            <button class="action-btn like" onclick="alert('공감했습니다!')">
+            <button class="action-btn like" onclick="likePost()">
                 <i class="fa-regular fa-thumbs-up"></i> 공감
             </button>
             <button class="action-btn scrap" onclick="alert('스크랩했습니다!')">
                 <i class="fa-regular fa-star"></i> 스크랩
             </button>
         </div>
-    </div>
+    </div> <!-- post-container 닫는 태그 -->
 
     <!-- 댓글 리스트 -->
     <div id="comment-list" class="comment-section"></div>
@@ -939,11 +949,11 @@
             </div>
         </div>
 
-        <!-- [6] 알림 / 마이페이지 -->
-        <div id="view-noti" class="hidden" style="text-align: center; padding-top: 100px;">
-            <i class="fa-regular fa-bell-slash" style="font-size: 3rem; color: #ddd;"></i>
-            <div style="color: #aaa; margin-top:10px;">알림이 없습니다.</div>
-        </div>
+        <!-- [6] 알림 화면 (수정됨: id="noti-list" 추가) -->
+<div id="view-noti" class="hidden" style="background: white; min-height: 100vh;">
+    <!-- 자바스크립트가 여기 내용을 채우거나, 비었을 때 '알림 없음'을 띄웁니다 -->
+    <ul id="noti-list" class="post-list" style="padding: 0;"></ul>
+</div>
         <!-- [6] 마이페이지 (수정됨: 인증완료 버튼 오른쪽 정렬) -->
 <div id="view-mypage" class="hidden" style="background: #f8f8f8; min-height: 100vh; padding-bottom: 20px;">
     <!-- 프로필 영역 -->
@@ -953,11 +963,6 @@
             <span class="profile-nickname">익명(나)</span>
             <span class="profile-detail">크랙대학교 <i class="fa-solid fa-circle-check" style="color: var(--primary-color);"></i></span>
         </div>
-        
-        <!-- 여기 style에 margin-left: auto; 추가함 -> 오른쪽 끝으로 이동 -->
-        <button style="margin-left: auto; border: 1px solid #ddd; background: white; padding: 6px 12px; border-radius: 15px; font-size: 0.75rem; color: #666; font-weight: bold;">
-            인증완료
-        </button>
     </section>
 
     <!-- 커뮤니티 활동 -->
@@ -971,11 +976,10 @@
             <i class="fa-regular fa-comment-dots"></i>
             <span class="mypage-menu-text">댓글 단 글</span>
         </div>
-        <div class="mypage-menu-item">
-            <i class="fa-solid fa-star" style="color: #FACC2E;"></i>
-            <span class="mypage-menu-text">스크랩</span>
-        </div>
-    </div>
+        <div class="mypage-menu-item" onclick="openScrapList()">
+    <i class="fa-solid fa-star" style="color: #FACC2E;"></i>
+    <span class="mypage-menu-text">스크랩</span>
+</div>
 
     <!-- 이용 안내 -->
     <div class="board-group-title">이용 안내</div>
@@ -1388,16 +1392,21 @@
             <span class="nav-text">마이페이지</span>
         </div>
     </nav>
+    <!-- [16] 스크랩 목록 화면 -->
+<div id="view-scrap-list" class="hidden" style="background: white; min-height: 100vh;">
+    <div class="board-detail-header">
+        <button class="back-btn" onclick="closeScrapList()"><i class="fa-solid fa-arrow-left"></i></button>
+        <span class="board-title-text">스크랩</span>
+    </div>
+    <ul id="scrap-list-ul" class="post-list" style="padding: 0 20px;">
+        <!-- JS로 채워짐 -->
+    </ul>
+</div>
 </main>
 
  <script>
         // 1. 데이터 (기존 글 + 비밀게시판 10개 추가됨)
         let postData = [
-            // --- 기존 글 ---
-            { board: "자유게시판", title: "아 집 가고 싶다", author: "익명", time: "방금", like: 5, content: "집 가고 싶어", comments: [] },
-            { board: "자유게시판", title: "CC 하지 마라", author: "익명", time: "10분 전", like: 10, content: "헤어지면 지옥", comments: [] },
-            { board: "비밀게시판", title: "임금님 귀는 당나귀", author: "익명", time: "어제", like: 2, content: "비밀임", comments: [] },
-
             // --- [비밀게시판 글 10개 추가] ---
             // 1. 강단우 짝사랑글
             { 
@@ -1591,7 +1600,7 @@
             { 
                 board: "대외활동", 
                 title: "UCC 공모전 영상 편집해주실 금손 구해요 (사례 함)", 
-                author: "미대생", 
+                author: "익명", 
                 time: "3시간 전", 
                 like: 5, 
                 content: "촬영 소스는 다 있습니다. 컷 편집이랑 자막, 효과만 넣어주시면 돼요.\n공모전 수상하면 상금 N빵 하고, 안 되더라도 수고비 10만원 챙겨드려요.\n프리미어 프로 잘 다루시는 분 쪽지 주세요!", 
@@ -1604,7 +1613,7 @@
             { 
                 board: "대외활동", 
                 title: "문창과 서재이 선배랑 공모전 나가보신 분?", 
-                author: "새내기", 
+                author: "익명", 
                 time: "5시간 전", 
                 like: 28, 
                 content: "이번에 시나리오 공모전 팀 구하시길래 지원해볼까 하는데..\n성격 엄청 까칠하시다는 소문이 있어서 쫄림 ㅠㅠ\n근데 글은 진짜 기깔나게 잘 쓰신다는데.. 버스 탑승 가능할까?", 
@@ -1759,42 +1768,84 @@
                     {author:"화석", text:"적당히 챙기면서 놀란 소리지 임마"}
                 ] 
             },
-            // --- [새내기 게시판 글 10개 추가 (24학번 세계관)] ---
+            // --- [새내기 게시판 글 10개 (2024년 2~3월 시점)] ---
             
-            // 1. 수강신청 질문 (가장 시급한 문제)
+            // 1. 수강신청 질문 (2월 수강신청 시즌)
             { 
                 board: "새내기게시판", 
                 title: "선배님들.. 수강신청 PC방 가야 하나요? ㅠㅠ", 
                 author: "익명", 
-                time: "방금", 
+                time: "24.02.13 09:50", 
                 like: 5, 
-                content: "집 컴퓨터 똥컴인데 PC방 가는 게 낫겠죠?\n서버 시간 네이비즘 켜놓고 하면 되나요?\n올클 못하면 휴학해야 되나요? 너무 떨려요...", 
+                content: "집 컴퓨터 똥컴인데 PC방 가는 게 낫겠죠?\n서버 시간 네이비즘 켜놓고 하면 되나요?\n10시 땡 하고 누르면 되나요? 올클 못하면 휴학해야 되나요? 너무 떨려요...", 
                 comments: [
-                    {author:"23학번", text:"무조건 PC방 가라. 0.1초 싸움이다."}, 
-                    {author:"20학번", text:"1학년은 어차피 전필이라 널널함 쫄지마"}
+                    {author:"익명1", text:"무조건 PC방 가라. 0.1초 싸움이다."}, 
+                    {author:"익명2", text:"1학년은 어차피 전필이라 널널함 쫄지마"}
                 ] 
             },
 
-            // 2. 학교 지리 (길치)
+            // 2. 시간표 망함 (수강신청 직후)
+            { 
+                board: "새내기게시판", 
+                title: "월요일 1교시랑 8교시만 있는데 이거 맞나요?", 
+                author: "익명", 
+                time: "24.02.14 14:20", 
+                like: 55, 
+                content: "중간에 6시간 비는데 집에 갔다 와도 되나요?\n우주공강 때 보통 뭐 하시나요..\n동기들은 다 시간표 잘 짰던데 저만 왜 이러죠 ㅠㅠ", 
+                comments: [
+                    {author:"익명1", text:"와 1교시 8교시 ㅋㅋㅋㅋㅋ 학교 지박령이네"}, 
+                    {author:"익명2", text:"도서관이랑 친해지겠네 축하한다"}
+                ] 
+            },
+
+            // 3. 술자리 걱정 (새내기 배움터 시즌)
+            { 
+                board: "새내기게시판", 
+                title: "새터 때 술 못 마시면 아싸 되나요?", 
+                author: "익명", 
+                time: "24.02.20 22:15", 
+                like: 8, 
+                content: "내일 새터 가는데 저 소주 2잔 마시면 자거든요..\n선배님들이 억지로 먹이시나요? ㅠㅠ\n장기자랑도 꼭 해야 되는지 궁금합니다.. I라서 죽고 싶어요.", 
+                comments: [
+                    {author:"익명1", text:"요즘 억지로 먹이면 신고당함 걱정 ㄴㄴ"}, 
+                    {author:"익명2", text:"안 마셔도 되는데 분위기 타면 재밌을걸?"}
+                ] 
+            },
+
+            // 4. 과잠 질문 (입학 직전)
+            { 
+                board: "새내기게시판", 
+                title: "과잠(학잠) 언제쯤 받을 수 있나요??", 
+                author: "익명", 
+                time: "24.02.28 15:30", 
+                like: 25, 
+                content: "입학식 때 입고 가고 싶은데 아직 신청도 안 받나요?\n너무 입고 싶어서 현기증 나요..\n그리고 돕바랑 과잠이랑 뭐가 더 실용적인가요?", 
+                comments: [
+                    {author:"익명1", text:"3월 초에 공구 예정입니다! 조금만 기다려주세요~"}, 
+                    {author:"익명2", text:"새내기 특: 3월에 과잠 입고 쪄 죽음"}
+                ] 
+            },
+
+            // 5. 학교 지리 (개강 첫날)
             { 
                 board: "새내기게시판", 
                 title: "공학관 가는 길 오르막길 실화인가요?", 
                 author: "익명", 
-                time: "10분 전", 
+                time: "24.03.04 08:50", 
                 like: 12, 
-                content: "정문에서 걸어 올라가다가 허벅지 터지는 줄 알았어요..\n셔틀버스 어디서 타는지 아시는 분 계신가요 ㅠㅠ\n학교가 왜 산에 있죠?", 
+                content: "정문에서 걸어 올라가다가 허벅지 터지는 줄 알았어요..\n셔틀버스 어디서 타는지 아시는 분 계신가요 ㅠㅠ\n학교가 왜 산에 있죠? 9시 수업인데 지각할 것 같아요.", 
                 comments: [
                     {author:"익명1", text:"크랙대 온 걸 환영한다 아가야. 다리 알은 덤이야."}, 
                     {author:"익명2", text:"정문 오른쪽 편의점 앞에서 타면 됨"}
                 ] 
             },
 
-            // 3. 밥약 (친구 구함)
+            // 6. 밥약 (개강 첫 주)
             { 
                 board: "새내기게시판", 
                 title: "오늘 점심 혼밥해야 되는데 같이 드실 분..?", 
                 author: "익명", 
-                time: "20분 전", 
+                time: "24.03.05 11:20", 
                 like: 3, 
                 content: "소프트웨어학과 24학번입니다..\n아는 사람이 아무도 없어서 학식 혼자 먹기 무서워요 ㅠㅠ\n학생회관 돈가스 같이 드실 동기 구합니다 쪽지 주세요!", 
                 comments: [
@@ -1803,82 +1854,26 @@
                 ] 
             },
 
-            // 4. 과잠 (로망)
-            { 
-                board: "새내기게시판", 
-                title: "과잠(학잠) 언제쯤 받을 수 있나요??", 
-                author: "익명", 
-                time: "1시간 전", 
-                like: 25, 
-                content: "입학식 때 입고 가고 싶은데 아직 신청도 안 받나요?\n너무 입고 싶어서 현기증 나요..\n그리고 돕바랑 과잠이랑 뭐가 더 실용적인가요?", 
-                comments: [
-                    {author:"학생회", text:"3월 초에 공구 예정입니다! 조금만 기다려주세요~"}, 
-                    {author:"익명1", text:"새내기 특: 3월에 과잠 입고 쪄 죽음"}
-                ] 
-            },
-
-            // 5. 술자리 걱정 (알쓰)
-            { 
-                board: "새내기게시판", 
-                title: "새터 때 술 못 마시면 아싸 되나요?", 
-                author: "익명", 
-                time: "3시간 전", 
-                like: 8, 
-                content: "저 소주 2잔 마시면 자는데..\n선배님들이 억지로 먹이시나요? ㅠㅠ\n장기자랑도 꼭 해야 되는지 궁금합니다.. I라서 죽고 싶어요.", 
-                comments: [
-                    {author:"23학번", text:"요즘 억지로 먹이면 신고당함 걱정 ㄴㄴ"}, 
-                    {author:"익명1", text:"안 마셔도 되는데 분위기 타면 재밌을걸?"}
-                ] 
-            },
-
-            // 6. 실수담 (교수님 호칭)
-            { 
-                board: "새내기게시판", 
-                title: "저 교수님한테 '선생님'이라고 했는데 어떡하죠", 
-                author: "익명", 
-                time: "어제", 
-                like: 142, 
-                content: "질문하러 갔다가 습관적으로 '쌤 이거 모르겠어요' 함...\n교수님이 허허 웃으시긴 했는데 F 주시진 않겠죠?\n고등학교 졸업한 지 얼마 안 돼서 입에 붙었어요 ㅠㅠ", 
-                comments: [
-                    {author:"익명1", text:"ㅋㅋㅋㅋㅋㅋ 귀엽네 교수님도 이해하실 듯"}, 
-                    {author:"익명2", text:"난 엄마라고 한 적도 있음 ㄱㅊ"}
-                ] 
-            },
-
-            // 7. 교재 구매 (호구 방지)
+            // 7. 교재 구매 (수강정정 기간)
             { 
                 board: "새내기게시판", 
                 title: "전공책 서점에서 새 거 다 사야 되나요?", 
                 author: "익명", 
-                time: "5시간 전", 
+                time: "24.03.07 16:40", 
                 like: 15, 
                 content: "강의계획서에 있는 책 미리 다 샀는데 20만원 깨짐..\n선배들이 OT 때 사라고 하던데 환불해야 할까요?\n제본? 북스캔? 그건 어디서 하는 건가요?", 
                 comments: [
-                    {author:"헌내기", text:"아이고 이 화상아.. 첫 수업 듣고 사도 늦지 않다."}, 
-                    {author:"익명1", text:"에타 장터게시판에서 중고로 사 제발"}
+                    {author:"익명1", text:"아이고 이 화상아.. 첫 수업 듣고 사도 늦지 않다."}, 
+                    {author:"익명2", text:"에타 장터게시판에서 중고로 사 제발"}
                 ] 
             },
 
-            // 8. CC 로망 (연애)
-            { 
-                board: "새내기게시판", 
-                title: "벚꽃 피기 전에 CC 가능할까요?", 
-                author: "익명", 
-                time: "방금", 
-                like: 30, 
-                content: "대학 오면 다 연애하는 줄 알았는데..\n미팅은 언제 들어오나요? 과팅 잡는 법 좀 알려주세요.\n올해는 꼭 벚꽃놀이 여친이랑 가고 싶어요.", 
-                comments: [
-                    {author:"익명1", text:"안 생겨요."}, 
-                    {author:"익명2", text:"CC 하지 마라.. 3월에 사귀면 5월에 군대 간다"}
-                ] 
-            },
-
-            // 9. 네임드 언급 (강단우 목격담)
+            // 8. 네임드 목격 (학기 초)
             { 
                 board: "새내기게시판", 
                 title: "소프트웨어학과 강단우 선배님 실물 봤는데..", 
                 author: "익명", 
-                time: "30분 전", 
+                time: "24.03.12 13:15", 
                 like: 88, 
                 content: "와 진짜 연예인인 줄;; 머리 완전 튀는데 잘생겼어요.\n근데 인상 좀 무서우시던데.. 말 걸면 화내시나요?\n친해지고 싶은데 방법 좀 알려주세요 ㅠㅠ", 
                 comments: [
@@ -1887,19 +1882,34 @@
                 ] 
             },
 
-            // 10. 시간표 망함 (우주공강)
+            // 9. 실수담 (3월 중순)
             { 
                 board: "새내기게시판", 
-                title: "월요일 1교시랑 8교시만 있는데 이거 맞나요?", 
+                title: "저 교수님한테 '선생님'이라고 했는데 어떡하죠", 
                 author: "익명", 
-                time: "어제", 
-                like: 55, 
-                content: "중간에 6시간 비는데 집에 갔다 와도 되나요?\n우주공강 때 보통 뭐 하시나요..\n동기들은 다 시간표 잘 짰던데 저만 왜 이러죠 ㅠㅠ", 
+                time: "24.03.15 10:30", 
+                like: 142, 
+                content: "질문하러 갔다가 습관적으로 '쌤 이거 모르겠어요' 함...\n교수님이 허허 웃으시긴 했는데 F 주시진 않겠죠?\n고등학교 졸업한 지 얼마 안 돼서 입에 붙었어요 ㅠㅠ", 
                 comments: [
-                    {author:"익명1", text:"와 1교시 8교시 ㅋㅋㅋㅋㅋ 학교 지박령이네"}, 
-                    {author:"익명2", text:"도서관이랑 친해지겠네 축하한다"}
+                    {author:"익명1", text:"ㅋㅋㅋㅋㅋㅋ 귀엽네 교수님도 이해하실 듯"}, 
+                    {author:"익명2", text:"난 엄마라고 한 적도 있음 ㄱㅊ"}
                 ] 
             },
+
+            // 10. CC 로망 (벚꽃 시즌 직전)
+            { 
+                board: "새내기게시판", 
+                title: "벚꽃 피기 전에 CC 가능할까요?", 
+                author: "익명", 
+                time: "24.03.25 23:45", 
+                like: 30, 
+                content: "대학 오면 다 연애하는 줄 알았는데..\n미팅은 언제 들어오나요? 과팅 잡는 법 좀 알려주세요.\n올해는 꼭 벚꽃놀이 여친이랑 가고 싶어요.", 
+                comments: [
+                    {author:"익명1", text:"안 생겨요."}, 
+                    {author:"익명2", text:"CC 하지 마라.. 3월에 사귀면 5월에 군대 간다"}
+                ] 
+            },
+            
             // --- [장터게시판 매물 10개 추가 (이상한 매물 포함)] ---
             
             // 1. 벌레 퇴치 (용병 구함)
@@ -2729,6 +2739,402 @@
                     {author:"익명1", text:"그것도 다 사회생활 경험이다 버텨"}, 
                     {author:"익명2", text:"회사 분위기 익히는 것만으로도 도움 됨"}
                 ] 
+            },
+            // --- [스크랩한 글 7개 추가 (이상한 민간요법/꿀팁)] ---
+            
+            // 1. 감기 민간요법
+            { 
+                board: "정보게시판", 
+                title: "감기 걸렸을 때 소주에 고춧가루 타 먹으면 직빵임", 
+                author: "익명", 
+                time: "2023.12.01", 
+                like: 512, 
+                content: "우리 할머니가 알려준 비법인데, 알코올이 바이러스 소독해주고 고춧가루가 땀 배출해줌.\n어제 열 39도였는데 이거 마시고 자니까 아침에 멀쩡해짐.\n약국 가지 말고 편의점 가라.", 
+                isScrap: true, // ★ 스크랩 표시
+                comments: [{author:"익명1", text:"그거 걍 취해서 아픈 거 까먹는 거 아님?"}] 
+            },
+
+            // 2. 바퀴벌레 퇴치
+            { 
+                board: "자취꿀팁", 
+                title: "바퀴벌레 나왔을 때 '치약' 뿌리면 즉사한다", 
+                author: "세스코", 
+                time: "2024.01.15", 
+                like: 890, 
+                content: "에프킬라 없을 때 당황하지 말고 치약 물에 풀어서 뿌리거나\n그냥 치약 짜서 바퀴 배 쪽에 묻히면 숨구멍 막혀서 3초 컷임.\n단점: 가까이 가서 묻혀야 됨.", 
+                isScrap: true,
+                comments: [{author:"익명1", text:"가까이 못 가서 스크랩만 해둠 ㅠㅠ"}] 
+            },
+
+            // 3. 변기 뚫기
+            { 
+                board: "자취꿀팁", 
+                title: "변기 막혔을 때 샴푸+린스 넣고 30분 기다리셈", 
+                author: "익명", 
+                time: "2024.02.01", 
+                like: 1205, 
+                content: "뚫어뻥 없을 때 비닐로 막고 누르기? 그거 하다 터지면 대참사임.\n그냥 샴푸랑 린스 왕창 붓고 뜨거운 물 조금 부은 다음\n유튜브 보고 오면 알아서 내려가 있음. 윤활유 역할이라 함.", 
+                isScrap: true,
+                comments: [] 
+            },
+
+            // 4. 밤샘 꿀팁 (건강 포기)
+            { 
+                board: "시험기간", 
+                title: "잠 안 오는 '붕붕드링크' 제조 비율 (심장 주의)", 
+                author: "약대생", 
+                time: "2023.10.20", 
+                like: 440, 
+                content: "박카스 2병 + 포카리스웨트 1캔 + 레모나 2포.\n이거 마시면 3일 동안 눈 떠있을 수 있음.\n대신 시험 끝나고 기절해서 15시간 잠.\n*주의: 심장 빨리 뛰면 바로 물 마셔라.", 
+                isScrap: true,
+                comments: [{author:"익명1", text:"이거 먹고 응급실 간 사람 봤음 조심"}] 
+            },
+
+            // 5. 딸꾹질 멈추기
+            { 
+                board: "정보게시판", 
+                title: "딸꾹질 10초 만에 멈추는 법 (혀 당기기)", 
+                author: "의대생", 
+                time: "2023.05.05", 
+                like: 332, 
+                content: "물구나무 서서 물 마시기? 숨 참기? 다 필요 없음.\n깨끗한 손수건으로 혀 잡고 밖으로 10초 동안 쭉 잡아당기셈.\n신경 자극해서 바로 멈춤. 공공장소에선 좀 추함.", 
+                isScrap: true,
+                comments: [] 
+            },
+
+            // 6. 술자리 스킬
+            { 
+                board: "새내기게시판", 
+                title: "술 안 취하는 비법: '초코우유 + 날달걀'", 
+                author: "주량4병", 
+                time: "2024.03.02", 
+                like: 66, 
+                content: "술 마시기 30분 전에 초코우유 하나 원샷하고,\n날달걀 노른자만 터트리지 말고 삼키면 위벽 보호됨.\n다음 날 숙취 하나도 없음. 내가 임상실험 완료함.", 
+                isScrap: true,
+                comments: [{author:"익명1", text:"날달걀 비려서 토할 듯"}] 
+            },
+
+            // 7. 심리학 (짝사랑)
+            { 
+                board: "연애상담", 
+                title: "좋아하는 사람 꼬시는 '미러링 효과' (심리학)", 
+                author: "심리학과", 
+                time: "2023.11.11", 
+                like: 778, 
+                content: "상대방이 물 마실 때 같이 마시고, 다리 꼬면 같이 꼬셈.\n무의식적으로 '이 사람 나랑 통한다'고 느끼게 됨.\n단, 너무 티 나게 따라 하면 원숭이 취급받음 주의.", 
+                isScrap: true,
+                comments: [{author:"익명1", text:"이거 하다가 따라 하지 말라고 욕먹음"}] 
+            },
+            // --- [도파민 스와핑 목격담 (자유게시판 3개)] ---
+            // 1. 서재이 캐붕(캐릭터 붕괴) 목격 (댓글 15개 버전)
+            { 
+                board: "자유게시판", 
+                title: "와 미친.. 문창과 서재이가 여자 가방 들어주는 거 실화냐?", 
+                author: "익명", 
+                time: "방금", 
+                like: 342, 
+                content: "예대 앞에서 담배 피우고 있길래 쫄아서 피해 가려고 했는데\n어떤 여자 나오니까 바로 담배 끄고 가방 뺏어서 들어줌;;\n심지어 웃고 있음. 내가 입학하고 쟤 웃는 거 처음 봄.\n근데 그 여자.. 간호학과 윤세아 아님. 누구냐?", 
+                comments: [
+                    {author:"익명1", text:"미친 해가 서쪽에서 뜨겠네 지구 멸망 징조임"}, 
+                    {author:"익명2", text:"헐 윤세아랑 헤어짐? 저 커플 오래가지 않았나? 충격인데"},
+                    {author:"익명3", text:"와 저 성격 받아주는 여자가 또 있네.. 대단하다 진짜"},
+                    {author:"익명4", text:"서재이가 가방을 들어? 지 전공책도 무겁다고 안 들고 다니는 놈인데?"},
+                    {author:"익명5", text:"웃는 거 봤냐? 와 진짜 여우 새끼.. 사람 홀리는 재주 있어"},
+                    {author:"익명6", text:"저거 백퍼 술 게임 벌칙 수행 중이다. 제정신일 리 없음"},
+                    {author:"익명7", text:"옆에 여자분 누구임? 우리 학교 학생 맞음?"},
+                    {author:"익명8", text:"나 전공 수업 때 펜 빌려달라니까 정색 빨던 놈 맞냐.. 배신감 드네"},
+                    {author:"익명9", text:"저 여자분 전생에 나라를 구했나.. 아니면 팔아먹었나(성격 때문에)"},
+                    {author:"익명10", text:"담배 피우다가 끈 게 레전드임."},
+                    {author:"익명11", text:"윤세아님이랑 분위기 완전 다른데? 좀 순하게 생기신 듯"},
+                    {author:"익명12", text:"이거 몰카 아님? 방송국 놈들 또 뭐 찍는 거 아니냐"},
+                    {author:"익명13", text:"와.. 나도 저 서재이한테 저런 대접받아보고 싶다 (남자임)"},
+                    {author:"익명14", text:"그래서 윤세아는? 환승인가? 도파민 터지네"},
+                    {author:"익명15", text:"야 지금 예대 앞으로 와라 강단우랑 마주침 ㅋㅋㅋㅋㅋㅋ"}
+                ] 
+            },
+            /// 2. 4자 대면 현장 중계 (도파민 폭발 - 댓글 15개 버전)
+            { 
+                board: "자유게시판", 
+                title: "[실시간] 예대 앞 라인업 미쳤다 ㅋㅋㅋㅋ 환승연애 찍음??", 
+                author: "팝콘각", 
+                time: "방금", 
+                like: 510, 
+                content: "상황 정리 해준다.\n\n1. 서재이가 어떤 여자랑 손깍지 끼고 있음.\n2. 맞은편에서 소트프 강단우랑 간호 윤세아가 같이 걸어옴 (???)\n3. 넷이 딱 마주쳤는데 분위기 개살벌함.\n\n강단우랑 윤세아? 서재이랑 쟤? 이거 커플 섞인 거 아님?\n지금 강단우 표정으로 사람 하나 죽일 것 같은데 구경하러 와라.", 
+                comments: [
+                    {author:"익명1", text:"와 미친 도파민 ㅋㅋㅋㅋㅋ 지금 보러 간다"}, 
+                    {author:"익명2", text:"강단우랑 윤세아 조합은 상상도 안 가는데;; 뭐냐 이 혼종은"},
+                    {author:"익명3", text:"크랙대판 환승연애네 ㅋㅋㅋ X를 선택하시겠습니까?"},
+                    {author:"익명4", text:"서재이가 웃고 있다고? 지구가 멸망하려나 봄"},
+                    {author:"익명5", text:"야 강단우 주먹 꽉 쥐고 부들거리는데? ㅋㅋㅋ 곧 한 대 칠 기세임"},
+                    {author:"익명6", text:"저 여자분은 누구임? 서재이 옆에 붙어있는 사람"},
+                    {author:"익명7", text:"윤세아님 표정 변화 1도 없는 게 레전드다.. 기 안 눌리네"},
+                    {author:"익명8", text:"예대 앞이라고? 전공 수업 째고 뛰어간다 자리 맡아놔라"},
+                    {author:"익명9", text:"넷 다 비주얼 미쳤네.. 무슨 드라마 촬영하는 줄"},
+                    {author:"익명10", text:"강단우가 서재이 째려보는데 서재이는 걍 무시하고 여자 챙김 ㄷㄷ"},
+                    {author:"익명11", text:"이거 싸움 나면 누가 이기냐? 난 강단우에 한 표"},
+                    {author:"익명12", text:"ㄴㄴ 서재이 말빨로 강단우 멘탈 털림 ㅅㄱ"},
+                    {author:"익명13", text:"야 강단우 지금 입모양 욕한 거 아님? 개무섭네"},
+                    {author:"익명14", text:"교수님 죄송합니다 오늘 수업 못 가요.. 이게 더 중요함"},
+                    {author:"익명15", text:"글쓴이야 실시간 중계 계속 해줘라 현기증 난다"}
+                ] 
+            },
+
+            // 3. 살벌한 기싸움 묘사
+            { 
+                board: "자유게시판", 
+                title: "서재이 vs 강단우 기싸움 레전드네 ㄷㄷ", 
+                author: "익명", 
+                time: "1분 전", 
+                like: 288, 
+                content: "강단우는 금방이라도 칠 것처럼 씩씩대는데\n서재이는 여유롭게 웃으면서 여자 어깨 감싸고 있음 ㅋㅋㅋ\n와중에 윤세아님 표정 변화 1도 없는 게 킬포..\n이거 뭐 치정 싸움이냐? 누가 설명 좀 해봐 현기증 난단 말이야.", 
+                comments: [
+                    {author:"익명1", text:"강단우 원래 성격 불같잖아 ㅋㅋㅋ 오늘 사고 치나"}, 
+                    {author:"익명2", text:"서재이 눈빛 봐라.. 즐기고 있는데?"}
+                ] 
+            },
+            // --- [연애상담 게시판 글 추가 (강단우 관련 고민 / 며칠 전 작성)] ---
+            
+            // 1. 유저(나)의 고민 글 (작성 시간: 3~4일 전 밤)
+            { 
+                board: "연애상담", 
+                title: "남친이 화낼 때마다 너무 무서운데 헤어져야 할까..?", 
+                author: "익명(나)", // ★ '나'라고 표시 (함수에서 파란색 '익명'으로 변환됨)
+                time: "24.02.15 23:40", // ★ 방금 아님. 며칠 전 밤에 쓴 글.
+                like: 12, 
+                content: "같은 과 CC인데 성격이 너무 불같아..\n\n내가 코딩하다 실수해서 에러 나면 한숨 푹 쉬면서 '아 비켜봐' 하고 뺏어서 자기가 다 고쳐주긴 하는데,\n'너는 머리를 장식으로 달고 다니냐?', '백업 안 하면 죽여버린다' 이런 식으로 말해.\n\n그리고 다른 남자 동기랑 말만 섞어도 눈빛 살벌해지고..\n나를 챙겨주는 건지 통제하는 건지 모르겠어.\n평소엔 잘해주는데 욱할 때마다 심장이 떨어질 것 같아.", 
+                comments: [
+                    {author:"익명1", text:"말하는 본새 보소.. 전형적인 나쁜 남자네"}, 
+                    {author:"익명2", text:"근데 다 고쳐주는 거면 츤데레 아님? ㅋㅋㅋ 능력은 있네"},
+                    {author:"익명3", text:"무서우면 헤어지는 게 맞지. 근데 걔가 놔줄까?"},
+                    {author:"익명4", text:"소프트 그분 아님? 유명하던데 성격 더럽기로"},
+                    {author:"익명5", text:"백업은 죽여버린다고 할 만함 ㅇㅇ (개발자 입장)"}
+                ] 
+            },
+
+            // 2. 다른 사람의 연애 고민 (구색 맞추기)
+            { 
+                board: "연애상담", 
+                title: "소개팅 애프터 읽씹 당했는데 끝난 거냐?", 
+                author: "익명", 
+                time: "24.05.18 10:20", 
+                like: 5, 
+                content: "분위기 좋았단 말이야..\n집 가서 '조심히 들어가셨나요?' 보냈는데 1이 안 없어진다.\n주선자한테 물어봐도 되냐?", 
+                comments: [
+                    {author:"익명1", text:"자라. 끝났다."}, 
+                    {author:"익명2", text:"맘에 안 들었나 보네 ㅠㅠ 힘내라"}
+                ] 
+            },
+            // --- [자유게시판 똥글 & 강단우 쉴드글 10개 추가] ---
+            
+            // 1. 유저(나)의 쉴드글 1 (능력 칭찬)
+            { 
+                board: "자유게시판", 
+                title: "소프트 강단우 인성 논란 좀 그만해라 (쉴드 아님)", 
+                author: "익명(나)", // ★ 내가 쓴 글 (파란색 익명)
+                time: "24.05.10 14:20", 
+                like: 12, 
+                content: "솔직히 팀플 해본 사람들은 알걸? 걔가 말만 험하지 버스 태워주는 건 1티어임.\n능력도 없으면서 입만 터는 애들보다 낫지 않냐?\n무작정 욕하는 거 보면 좀 그렇네. 난 도움 많이 받음.", 
+                comments: [
+                    {author:"익명1", text:"그건 맞지.. 과제 프리패스권이긴 함"}, 
+                    {author:"익명2", text:"말투가 재수 없어서 그렇지 틀린 말은 안 함 ㅋㅋ"}
+                ] 
+            },
+            // --- [연애상담 게시판 글 5개 추가] ---
+
+            // 1. 비밀 CC 고충
+            { 
+                board: "연애상담", 
+                title: "비밀 CC인데 동기들이 남친한테 소개팅 주선함 ㅡㅡ", 
+                author: "익명", 
+                time: "방금", 
+                like: 42, 
+                content: "과 동기들이 눈치 없이 '야 너 외롭지 않냐? 미팅 나갈래?' 이럼.\n남친이 거절하긴 했는데 표정 관리 안 돼서 죽는 줄..\n그냥 공개 연애 할까? 근데 헤어지면 감당 안 될 것 같고 하..", 
+                comments: [
+                    {author:"익명1", text:"공개하는 순간 니들 싸우는 거 생중계됨 절대 ㄴㄴ"}, 
+                    {author:"익명2", text:"티 내지 말고 참아.. 졸업할 때까지 비밀이 국룰임"}
+                ] 
+            },
+
+            // 2. 군대(곰신) 고민
+            { 
+                board: "연애상담", 
+                title: "남친 군대 간 지 일주일 됐는데 벌써 힘들다", 
+                author: "익명", 
+                time: "10분 전", 
+                like: 88, 
+                content: "연락도 안 되고 인편만 쓰고 있는데 미칠 것 같아.\n길거리 지나가는 군인만 봐도 눈물 남.\n이거 1년 6개월 어떻게 기다리냐? 기다린 사람들 존경한다 진짜.", 
+                comments: [
+                    {author:"익명1", text:"일병 달 때쯤이면 너도 익숙해져서 클럽 가고 있을걸"}, 
+                    {author:"익명2", text:"훈련소 때가 제일 힘들지 ㅠㅠ 힘내라"}
+                ] 
+            },
+
+            // 3. 네임드 질투 (서재이 언급)
+            { 
+                board: "연애상담", 
+                title: "여친이 문창과 서재이랑 같은 조인데 질투 나면 찌질한 거냐?", 
+                author: "익명", 
+                time: "30분 전", 
+                like: 15, 
+                content: "걔 얼굴도 잘생기고 분위기 있어서 유명하잖아.\n여친이 '서재이 선배가 과제 도와줬다'고 하는데 기분 확 나빠짐.\n내가 예민한 거임? 남자들은 알잖아 저런 놈이 더 위험한 거.", 
+                comments: [
+                    {author:"익명1", text:"서재이는 여자한테 관심 없음. 너보다 책을 더 좋아할걸?"}, 
+                    {author:"익명2", text:"솔직히 서재이 와꾸면 불안할 만함 ㅋㅋㅋ"}
+                ] 
+            },
+
+            // 4. 짝사랑 (그린라이트?)
+            { 
+                board: "연애상담", 
+                title: "도서관 옆자리 그분이 캔커피 주셨는데 이거 뭐냐?", 
+                author: "두근두근", 
+                time: "1시간 전", 
+                like: 120, 
+                content: "맨날 같은 자리에 앉는 분인데 오늘 갑자기 조지아 커피 주시면서\n포스트잇에 '시험 파이팅하세요' 적혀있음.\n이거 그린라이트 맞지? 번호 물어봐도 되냐?", 
+                comments: [
+                    {author:"익명1", text:"1+1이라서 남는 거 처리한 거 아님?"}, 
+                    {author:"익명2", text:"쪽지까지 줬으면 빼박이지 당장 고백 공격 ㄱㄱ"}
+                ] 
+            },
+
+            // 5. 전여친/전남친 (이불킥)
+            { 
+                board: "연애상담", 
+                title: "어제 술 먹고 전남친한테 '자니?' 카톡 보냈다..", 
+                author: "익명", 
+                time: "어제", 
+                like: 255, 
+                content: "아침에 일어나서 확인하고 폰 던짐.\n심지어 1 사라졌는데 답장 없음.\n읽씹 당함 ㅋㅋㅋㅋㅋㅋ\n자퇴하고 지구 떠나고 싶다 제발 나 좀 죽여줘.", 
+                comments: [
+                    {author:"익명1", text:"아.. 그건 좀.. 명복을 빈다"}, 
+                    {author:"익명2", text:"'술김에 친구랑 벌칙 게임 함'이라고 빨리 구라 쳐"}
+                ] 
+            },
+
+            // 2. 아무말 똥글 (배고픔)
+            { 
+                board: "자유게시판", 
+                title: "지금 학관 돈가스 먹을까 컵라면 먹을까", 
+                author: "익명", 
+                time: "방금", 
+                like: 0, 
+                content: "결정장애 왔다.. \n돈가스 줄 길면 걍 편의점 갈까\n추천 좀", 
+                comments: [
+                    {author:"익명1", text:"돈가스 ㄱㄱ 오늘 치즈 나옴"}, 
+                    {author:"익명2", text:"난 굶음"}
+                ] 
+            },
+
+            // 3. 아무말 똥글 (교수님)
+            { 
+                board: "자유게시판", 
+                title: "교수님 제발 진도 좀 천천히 나가주세요", 
+                author: "익명", 
+                time: "10분 전", 
+                like: 45, 
+                content: "KTX 타고 지나가시는 줄\n필기하다가 손목 나갈 것 같음\n이게 수업이냐 랩이냐", 
+                comments: [
+                    {author:"익명1", text:"원래 거기 독학해야 됨"}, 
+                    {author:"익명2", text:"아직 중간고사 안 왔는데 벌써 지치네"}
+                ] 
+            },
+
+            // 4. 유저(나)의 쉴드글 2 (오해 해명)
+            { 
+                board: "자유게시판", 
+                title: "아까 복도에서 강단우 소리 지른 거 싸운 거 아님", 
+                author: "익명(나)", 
+                time: "24.05.12 11:05", 
+                like: 8, 
+                content: "밑에 글 보니까 뭐 후배 꼽줬다 그러던데 내가 옆에서 봤음.\n그냥 공사장 소리 때문에 안 들려서 크게 말해준 거던데?\n원래 목소리 톤이 좀 공격적이라 그렇지 화낸 거 아니었음. 오해 ㄴㄴ", 
+                comments: [
+                    {author:"익명1", text:"너 강단우냐? 본인 등판했네"}, 
+                    {author:"글쓴이", text:"아니라고;; 억까 심해서 팩트 말해준 거임"}
+                ] 
+            },
+
+            // 5. 아무말 똥글 (고양이)
+            { 
+                board: "자유게시판", 
+                title: "중도 앞 고양이 츄르 줘도 됨?", 
+                author: "익명", 
+                time: "30분 전", 
+                like: 88, 
+                content: "식빵 굽고 있는데 너무 귀엽다 미친\n납치하고 싶다..\n편의점에서 츄르 사 와도 되나?", 
+                comments: [
+                    {author:"익명1", text:"이미 뚱냥이임 그만 줘라"}, 
+                    {author:"익명2", text:"귀여운 게 최고야 짜릿해"}
+                ] 
+            },
+
+            // 6. 유저(나)의 쉴드글 3 (의외의 모습 제보)
+            { 
+                board: "자유게시판", 
+                title: "소프트 그 무서운 선배 의외로 착하던데?", 
+                author: "익명(나)", 
+                time: "24.05.14 09:30", 
+                like: 25, 
+                content: "강단우 선배 말이야.\n저번에 편의점 알바가 계산 실수해서 쩔쩔매니까\n화낼 줄 알았는데 그냥 '됐어요' 하고 잔돈 안 받고 가더라.\n소문만큼 나쁜 사람은 아닌 듯?", 
+                comments: [
+                    {author:"익명1", text:"오 의외네.. 인성 파탄자인 줄"}, 
+                    {author:"익명2", text:"잘생겨서 쉴드 치는 거 아님? ㅋㅋ"}
+                ] 
+            },
+
+            // 7. 아무말 똥글 (시험기간)
+            { 
+                board: "자유게시판", 
+                title: "이번 생은 글렀다 다음 생은 돌멩이로 태어나야지", 
+                author: "익명", 
+                time: "1시간 전", 
+                like: 104, 
+                content: "과제 3개 시험 2개 퀴즈 1개\n이걸 이번 주에 다 하라고?\n교수님들은 우리가 헤르미온느인 줄 아나 봄", 
+                comments: [
+                    {author:"익명1", text:"야 너두? 야 나두"}, 
+                    {author:"익명2", text:"자퇴가 답이다"}
+                ] 
+            },
+
+            // 8. 아무말 똥글 (날씨)
+            { 
+                board: "자유게시판", 
+                title: "오늘 날씨 미쳤다 한강 가고 싶다", 
+                author: "익명", 
+                time: "2시간 전", 
+                like: 30, 
+                content: "강의실에 쳐박혀 있기엔 너무 아까운 날씨다..\n자체 휴강 때리고 돗자리 펴고 맥주나 마시고 싶네\n출석 부르겠지? 하..", 
+                comments: [
+                    {author:"익명1", text:"나가라. F가 널 부른다."}, 
+                    {author:"익명2", text:"이미 튀었음 ㅋㅋ"}
+                ] 
+            },
+
+            // 9. 아무말 똥글 (화장실)
+            { 
+                board: "자유게시판", 
+                title: "공학관 화장실 휴지 좀 채워놔라 제발", 
+                author: "익명", 
+                time: "3시간 전", 
+                like: 12, 
+                content: "등록금 내서 어디다 쓰냐?\n급해서 들어왔다가 양말 희생할 뻔했다.\n물도 잘 안 내려감 ㅡㅡ", 
+                comments: [
+                    {author:"익명1", text:"양말 ㅋㅋㅋㅋㅋ"}, 
+                    {author:"익명2", text:"총학에 건의해"}
+                ] 
+            },
+
+            // 10. 아무말 똥글 (통학러)
+            { 
+                board: "자유게시판", 
+                title: "통학 왕복 4시간인데 자취해야 될까", 
+                author: "경기도민", 
+                time: "4시간 전", 
+                like: 60, 
+                content: "길바닥에 버리는 시간이 너무 아깝다.\n근데 월세 감당할 자신이 없음..\n기숙사는 광탈했고 어떡하냐 인생", 
+                comments: [
+                    {author:"익명1", text:"몸 갈리는 것보다 돈 쓰는 게 낫다 자취해라"}, 
+                    {author:"익명2", text:"4시간이면 에바지 ㅋㅋㅋ"}
+                ] 
             }
         ];
         
@@ -2757,30 +3163,44 @@ const views = {
 
     // ★ 여기가 빠져서 안 떴던 겁니다! (추가해주세요)
     charProfiles: document.getElementById('view-char-profiles'),
-    notice: document.getElementById('view-notice')
+    notice: document.getElementById('view-notice'),
+    scrapList: document.getElementById('view-scrap-list')
 };
 
 
 
         // 네비게이션
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach((item, index) => {
-            item.addEventListener('click', function() {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-                
-                // 모든 화면 숨김
-                Object.values(views).forEach(v => v.classList.add('hidden'));
+       // 네비게이션 (수정됨: 알림 탭 클릭 시 renderNoti 실행)
+// 네비게이션 탭 클릭 이벤트 (수정됨: 모든 화면 강력하게 숨김)
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach((item, index) => {
+    item.addEventListener('click', function() {
+        // 1. 아이콘 활성화
+        navItems.forEach(nav => nav.classList.remove('active'));
+        this.classList.add('active');
+        
+        // 2. ★ [수정] 현재 열려있는 모든 화면 강제 종료 ★
+        const allViews = document.querySelectorAll('main > div');
+        allViews.forEach(view => view.classList.add('hidden'));
 
-                // 탭 이동
-                if (index === 0) views.home.classList.remove('hidden');
-                else if (index === 1) views.boardList.classList.remove('hidden');
-                else if (index === 2) views.noti.classList.remove('hidden');
-                else if (index === 3) views.mypage.classList.remove('hidden');
-                
-                window.scrollTo(0, 0);
-            });
-        });
+        // 3. 탭 이동 로직
+        if (index === 0) {
+            document.getElementById('view-home').classList.remove('hidden');
+        } 
+        else if (index === 1) {
+            document.getElementById('view-board').classList.remove('hidden');
+        } 
+        else if (index === 2) {
+            document.getElementById('view-noti').classList.remove('hidden');
+            renderNoti(); 
+        } 
+        else if (index === 3) {
+            document.getElementById('view-mypage').classList.remove('hidden');
+        }
+        
+        window.scrollTo(0, 0);
+    });
+});
 
         // [기능: 강의평가 열기/닫기] --- 새로 추가됨
         function openEvaluation() {
@@ -2802,6 +3222,7 @@ const views = {
         let currentPostIndex = -1;
 
         /* --- [수정] 게시판 목록 UI (따봉 파란색 변경) --- */
+/* --- [수정] 게시판 목록 (최신순 정렬 적용) --- */
 function openBoard(boardName) {
     currentBoardName = boardName;
     views.boardList.classList.add('hidden');
@@ -2811,18 +3232,20 @@ function openBoard(boardName) {
     const listContainer = document.querySelector('#view-board-detail .post-list');
     listContainer.innerHTML = "";
     
-    // 해당 게시판 글 필터링
-    const filteredPosts = postData.map((p, i) => ({...p, idx: i})).filter(p => p.board === boardName);
+    // 1. 해당 게시판 글 필터링
+    let filteredPosts = postData.map((p, i) => ({...p, idx: i})).filter(p => p.board === boardName);
+    
+    // 2. ★ 시간순 정렬 (최신순) ★
+    filteredPosts.sort((a, b) => parseTime(b.time) - parseTime(a.time));
     
     if (filteredPosts.length === 0) {
         listContainer.innerHTML = "<div style='text-align:center; padding:50px; color:#aaa;'>작성된 글이 없습니다.</div>";
         return;
     }
 
-    filteredPosts.reverse().forEach(post => {
+    filteredPosts.forEach(post => {
         const li = document.createElement('li');
         li.className = 'post-item';
-        
         li.style.cssText = "padding: 18px 20px; border-bottom: 1px solid #e3e3e3; background: white;";
         
         const commentCount = post.comments.length || 0;
@@ -2840,14 +3263,12 @@ function openBoard(boardName) {
                     <span>${post.time}</span>
                 </div>
                 <div style="display: flex; gap: 10px; font-weight: bold;">
-                    <!-- 여기 색상을 var(--primary-color)로 변경함 (파란색) -->
                     <span style="color: var(--primary-color);"><i class="fa-regular fa-thumbs-up"></i> ${post.like}</span>
                     <span style="color: #0CA5AF;"><i class="fa-regular fa-comment-dots"></i> ${commentCount}</span>
                 </div>
             </div>
         `;
-        
-        li.onclick = () => openPost(post.idx);
+        li.onclick = () => openPost(post.idx); // 정렬된 후에도 원본 인덱스(post.idx)를 따라갑니다.
         listContainer.appendChild(li);
     });
 }
@@ -2857,29 +3278,48 @@ function openBoard(boardName) {
             views.boardList.classList.remove('hidden');
         }
 
-      /* --- [수정] 이미지 표시 기능 추가된 openPost --- */
+/* --- [수정 1] 글 열 때 뒤에 목록들 다 숨기기 --- */
 let lastScrollY = 0; 
+let postSource = ""; // 어디서 들어왔는지 저장 ('board', 'mypost', 'scrap')
 
-function openPost(index) {
-    lastScrollY = window.scrollY; // 스크롤 위치 저장
-
+/* --- [수정] 게시글 상세 열기 (모든 화면 확실히 숨기기 추가) --- */
+function openPost(index, source = 'board') {
+    lastScrollY = window.scrollY;
+    postSource = source; // 출처 저장
     currentPostIndex = index;
     const post = postData[index];
     
-    views.boardDetail.classList.add('hidden');
+    // ★ [핵심 수정] main 태그 안의 모든 화면을 싹 다 숨깁니다 ★
+    // (이렇게 하면 알림 화면, 게시판 목록, 마이페이지 등이 전부 깔끔하게 닫힙니다)
+    const allViews = document.querySelectorAll('main > div');
+    allViews.forEach(view => view.classList.add('hidden'));
+    
+    // 상세 화면만 열기
     views.postDetail.classList.remove('hidden');
     
-    // 텍스트 데이터 바인딩
+    // --- 데이터 바인딩 (기존과 동일) ---
     document.getElementById('post-category-display').innerText = post.board;
     document.getElementById('post-title-display').innerText = post.title;
-    document.getElementById('post-author-display').innerText = post.author;
     document.getElementById('post-time-display').innerText = post.time;
     
-    // ★ 내용 및 이미지 처리 (핵심) ★
+    const authorEl = document.getElementById('post-author-display');
+    if (post.author === "익명(나)") {
+        authorEl.innerText = "익명";
+        authorEl.style.color = "var(--primary-color)"; 
+        authorEl.style.fontWeight = "800"; 
+    } else {
+        authorEl.innerText = post.author;
+        authorEl.style.color = "#292929"; 
+        authorEl.style.fontWeight = "bold";
+    }
+    
     const contentEl = document.getElementById('post-content-display');
-    contentEl.innerText = post.content; // 일단 텍스트 넣기
+    contentEl.innerText = post.content;
 
-    // 만약 이미지(post.img)가 있다면, 텍스트 아래에 이미지 태그 추가
+    // 이미지가 있다면 추가
+    const existingImg = contentEl.querySelector('img');
+    if(existingImg) existingImg.remove(); // 기존 이미지 제거
+    
     if (post.img) {
         const imgTag = document.createElement('img');
         imgTag.src = post.img;
@@ -2887,7 +3327,6 @@ function openPost(index) {
         contentEl.appendChild(imgTag);
     }
     
-    // 통계 숫자 바인딩
     document.getElementById('post-like-count').innerText = post.like || 0;
     document.getElementById('post-comment-count').innerText = post.comments.length;
     
@@ -2895,11 +3334,28 @@ function openPost(index) {
     window.scrollTo(0, 0); 
 }
 
-        function closePost() {
+/* --- [수정] closePost: 알림에서 왔으면 알림 화면으로 복귀 --- */
+function closePost() {
+    // 1. 현재 게시글 닫기
     views.postDetail.classList.add('hidden');
-    views.boardDetail.classList.remove('hidden');
     
-    // 3. 아까 저장해둔 위치로 스크롤 복구!
+    // 2. 어디서 왔는지(postSource)에 따라 돌아갈 화면 결정
+    if (postSource === 'mypost') {
+        views.myPostList.classList.remove('hidden'); // 내가 쓴 글 목록
+    } 
+    else if (postSource === 'scrap') {
+        views.scrapList.classList.remove('hidden'); // 스크랩 목록
+    } 
+    else if (postSource === 'noti') {
+        // ★ [추가된 부분] 알림에서 왔으면 알림 화면 열기 ★
+        views.noti.classList.remove('hidden');
+    } 
+    else {
+        // 기본값: 게시판 글 목록
+        views.boardDetail.classList.remove('hidden');
+    }
+    
+    // 스크롤 위치 복구
     window.scrollTo(0, lastScrollY);
 }
 
@@ -2926,13 +3382,39 @@ function renderComments() {
     });
 }
 
-        function addComment() {
-            const input = document.getElementById('comment-input');
-            if(!input.value) return;
-            postData[currentPostIndex].comments.push({author: "익명(나)", text: input.value, time: "방금"});
-            input.value = "";
-            renderComments();
+        /* --- [수정] addComment 함수 --- */
+function addComment() {
+    const input = document.getElementById('comment-input');
+    const val = input.value;
+    if(!val) return;
+
+    // 현재 보고 있는 게시글 데이터 가져오기
+    const post = postData[currentPostIndex];
+
+    // 1. 댓글 데이터 추가
+    post.comments.push({author: "익명(나)", text: val, time: "방금"});
+
+    // 2. 알림 추가 로직 (내가 쓴 글일 경우)
+    if (post.author === "익명(나)") {
+        const newNoti = {
+            type: "comment",
+            msg: `<b>익명(나)</b>님이 회원님의 글에 댓글을 남겼습니다.<br><span style='color:#888; font-size:0.85rem;'> "${val}"</span>`,
+            
+            // ★ [수정 포인트] 알림 시간을 게시글 시간과 동일하게 설정
+            time: post.time, 
+            
+            postTitle: post.title
+        };
+        
+        // notiData가 있으면 추가
+        if (typeof notiData !== 'undefined') {
+            notiData.unshift(newNoti);
         }
+    }
+
+    input.value = "";
+    renderComments();
+}
 
         // 글쓰기 버튼 연결
         document.querySelector('.write-btn').onclick = function() {
@@ -3025,7 +3507,7 @@ function closeNotice() {
     views.mypage.classList.remove('hidden');
 }
     
-/* --- [기능] 내가 쓴 글 모아보기 --- */
+/* --- [수정 3] 내가 쓴 글 목록 열기 --- */
 function openMyPostList() {
     views.mypage.classList.add('hidden');
     views.myPostList.classList.remove('hidden');
@@ -3033,21 +3515,18 @@ function openMyPostList() {
     const listUl = document.getElementById('mypost-list-ul');
     listUl.innerHTML = "";
     
-    // 작성자가 "익명(나)" 인 것만 필터링
-    const myPosts = postData.filter(p => p.author === "익명(나)");
+    let myPosts = postData.map((p, i) => ({...p, idx: i})).filter(p => p.author === "익명(나)");
+    myPosts.sort((a, b) => parseTime(b.time) - parseTime(a.time));
     
     if(myPosts.length === 0) {
         listUl.innerHTML = "<div style='text-align:center; padding:50px; color:#aaa;'>작성한 글이 없습니다.</div>";
         return;
     }
     
-    // 최신순 정렬을 위해 reverse() 사용 (원본 보존을 위해 spread operator 사용)
-    [...myPosts].reverse().forEach(post => {
+    myPosts.forEach(post => {
         const li = document.createElement('li');
         li.className = 'post-item';
         li.style.cssText = "padding: 15px 0; border-bottom: 1px solid #f5f5f5;";
-        // 원본 postData에서의 인덱스를 찾아서 연결해야 함
-        const originalIdx = postData.indexOf(post);
         
         li.innerHTML = `
             <div class="post-title">${post.title}</div>
@@ -3056,7 +3535,8 @@ function openMyPostList() {
                 <span class="post-stats"><i class="fa-regular fa-thumbs-up"></i> ${post.like}</span>
             </div>
         `;
-        li.onclick = () => openPost(originalIdx); // 글 상세로 이동
+        // ★ 여기 중요: 'mypost'라고 꼬리표를 달아줍니다.
+        li.onclick = () => openPost(post.idx, 'mypost'); 
         listUl.appendChild(li);
     });
 }
@@ -3066,8 +3546,27 @@ function closeMyPostList() {
     views.mypage.classList.remove('hidden');
 }
 
+/* --- [추가] 공감 버튼 기능 (숫자 증가 및 중복 방지) --- */
+function likePost() {
+    // 1. 현재 보고 있는 글 데이터 가져오기
+    const post = postData[currentPostIndex];
 
+    // 2. 이미 공감했는지 확인 (게시글 객체에 isLiked 속성 추가)
+    if (post.isLiked) {
+        alert("이미 공감한 게시글입니다.");
+        return;
+    }
 
+    // 3. 데이터 업데이트
+    post.like = (post.like || 0) + 1; // 기존 좋아요 수 + 1
+    post.isLiked = true; // 공감 완료 플래그 설정
+
+    // 4. 화면(UI) 즉시 갱신
+    document.getElementById('post-like-count').innerText = post.like;
+    
+    // 5. 안내 메시지
+    alert("공감했습니다!");
+}
 
 /* --- [기능] 쪽지(메시지) 시스템 --- */
 
@@ -3207,6 +3706,151 @@ function goToMyPage() {
     if(myPageTab) {
         myPageTab.click();
     }
+}
+/* --- [기능] 스크랩 목록 열기/닫기 --- */
+/* --- [수정] 스크랩 목록 (최신순 정렬) --- */
+function openScrapList() {
+    views.mypage.classList.add('hidden');
+    views.scrapList.classList.remove('hidden');
+    
+    const listUl = document.getElementById('scrap-list-ul');
+    listUl.innerHTML = "";
+    
+    // 1. 스크랩 글 필터링
+    let scrapPosts = postData.map((p, i) => ({...p, idx: i})).filter(p => p.isScrap === true);
+    
+    // 2. ★ 시간순 정렬 ★
+    scrapPosts.sort((a, b) => parseTime(b.time) - parseTime(a.time));
+    
+    if(scrapPosts.length === 0) {
+        listUl.innerHTML = "<div style='text-align:center; padding:50px; color:#aaa;'>스크랩한 글이 없습니다.</div>";
+        return;
+    }
+    
+    scrapPosts.forEach(post => {
+        const li = document.createElement('li');
+        li.className = 'post-item';
+        li.style.cssText = "padding: 15px 0; border-bottom: 1px solid #f5f5f5;";
+        
+        li.innerHTML = `
+            <div class="post-title" style="font-weight:bold;">${post.title}</div>
+            <div class="post-info">
+                <span>${post.board} | ${post.author}</span>
+                <span class="post-stats" style="color:#FACC2E;"><i class="fa-solid fa-star"></i> 스크랩</span>
+            </div>
+        `;
+        li.onclick = () => openPost(post.idx, 'scrap'); // 'scrap' 출처 표시
+        listUl.appendChild(li);
+    });
+}
+
+function closeScrapList() {
+    views.scrapList.classList.add('hidden');
+    views.mypage.classList.remove('hidden');
+}
+/* --- [기능] 시간 문자열을 비교 가능한 숫자로 변환하는 함수 --- */
+function parseTime(timeStr) {
+    const now = new Date(); // 현재 시간 기준
+
+    // 1. 상대 시간 처리
+    if (timeStr === "방금") return now.getTime(); // 가장 큰 수 (가장 최신)
+    if (timeStr.includes("분 전")) return now.getTime() - parseInt(timeStr) * 60 * 1000;
+    if (timeStr.includes("시간 전")) return now.getTime() - parseInt(timeStr) * 60 * 60 * 1000;
+    if (timeStr === "어제") return now.getTime() - 24 * 60 * 60 * 1000;
+    if (timeStr.includes("새벽")) return now.getTime() - 12 * 60 * 60 * 1000; // 대충 어제 밤으로 처리
+
+    // 2. 날짜 형식 처리 (24.05.15 10:00 등)
+    let dateStr = timeStr;
+    // "24." 로 시작하면 "2024."로 인식하게 변경
+    if (/^\d{2}\./.test(dateStr)) {
+        dateStr = "20" + dateStr; 
+    }
+    // "2024.05.15" -> "2024/05/15" (계산하기 좋게 변경)
+    dateStr = dateStr.replace(/\./g, '/');
+    
+    return new Date(dateStr).getTime();
+}
+/* --- [기능] 알림 데이터 및 렌더링 --- */
+/* --- [수정] 초기 알림 데이터 (게시글 날짜와 일치시킴) --- */
+let notiData = [
+    {
+        type: "comment",
+        msg: "<b>익명3</b>님이 댓글을 남겼습니다.<br><span style='color:#888; font-size:0.85rem;'>\"무서우면 헤어지는 게 맞지. 근데 걔가 놔줄까?\"</span>",
+        time: "24.02.15 23:40", // 원래 '방금' -> 게시글 날짜로 변경
+        postTitle: "남친이 화낼 때마다 너무 무서운데..."
+    },
+    {
+        type: "comment",
+        msg: "<b>익명2</b>님이 대댓글을 남겼습니다.<br><span style='color:#888; font-size:0.85rem;'>\"잘생겨서 쉴드 치는 거 아님? ㅋㅋ\"</span>",
+        time: "24.05.14 09:30", // 원래 '10분 전' -> 게시글 날짜로 변경
+        postTitle: "소프트 그 무서운 선배 의외로..."
+    },
+    {
+        type: "hot",
+        msg: "작성하신 글이 <b>실시간 인기 글</b>로 선정되었습니다!<br><span style='color:#888; font-size:0.85rem;'>소프트 강단우 인성 논란 좀 그만해라 (쉴드 아님)</span>",
+        time: "24.05.10 14:20", // 원래 '1시간 전' -> 게시글 날짜로 변경
+        postTitle: "소프트 강단우 인성 논란 좀..."
+    },
+    {
+        type: "comment",
+        msg: "<b>익명1</b>님이 댓글을 남겼습니다.<br><span style='color:#888; font-size:0.85rem;'>\"너 강단우냐? 본인 등판했네\"</span>",
+        time: "24.05.12 11:05", // 원래 '어제' -> 게시글 날짜로 변경
+        postTitle: "아까 복도에서 강단우 소리 지른 거..."
+    },
+    {
+        type: "comment",
+        msg: "<b>익명5</b>님이 댓글을 남겼습니다.<br><span style='color:#888; font-size:0.85rem;'>\"백업은 죽여버린다고 할 만함 ㅇㅇ\"</span>",
+        time: "24.02.15 23:40", // 원래 '어제' -> 게시글 날짜로 변경
+        postTitle: "남친이 화낼 때마다 너무 무서운데..."
+    }
+];
+
+/* --- [수정] 알림 렌더링 함수 (클릭 시 해당 글로 이동 기능 추가) --- */
+/* --- [수정] renderNoti: 알림 클릭 시 출처('noti')를 함께 전달 --- */
+function renderNoti() {
+    const list = document.getElementById('noti-list');
+    list.innerHTML = "";
+
+    if(notiData.length === 0) {
+        list.innerHTML = `
+            <div style="text-align: center; padding-top: 100px;">
+                <i class="fa-regular fa-bell-slash" style="font-size: 3rem; color: #ddd;"></i>
+                <div style="color: #aaa; margin-top:10px;">알림이 없습니다.</div>
+            </div>`;
+        return;
+    }
+
+    notiData.forEach(noti => {
+        let icon = '<i class="fa-regular fa-comment-dots" style="color: var(--primary-color);"></i>';
+        let bgStyle = "background: white;";
+        
+        if(noti.type === 'hot') {
+            icon = '<i class="fa-solid fa-fire" style="color: #c62917;"></i>';
+            bgStyle = "background: #fff8f8;"; 
+        }
+
+        // 제목으로 글 찾기
+        const searchTitle = noti.postTitle.replace(/\.\.\.$/, '').trim();
+        const targetIndex = postData.findIndex(p => p.title.includes(searchTitle));
+
+        // ★ [여기가 수정됨] openPost(번호, 'noti') <- 뒤에 'noti' 추가! ★
+        const clickAction = targetIndex !== -1 
+            ? `openPost(${targetIndex}, 'noti')` 
+            : `alert('삭제되었거나 찾을 수 없는 글입니다.')`;
+
+        list.innerHTML += `
+            <li class="post-item" style="padding: 15px 20px; border-bottom: 1px solid #f5f5f5; display:flex; align-items:flex-start; cursor: pointer; ${bgStyle}" onclick="${clickAction}">
+                <div style="margin-right:15px; padding-top:4px; font-size:1.2rem;">${icon}</div>
+                <div style="flex:1;">
+                    <div style="font-size:0.9rem; margin-bottom:5px; line-height:1.4; color:#333;">${noti.msg}</div>
+                    <div style="font-size:0.75rem; color:#aaa; display:flex; justify-content:space-between;">
+                        <span>${noti.time}</span>
+                        <span style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${noti.postTitle}</span>
+                    </div>
+                </div>
+            </li>
+        `;
+    });
 }
     </script>
 </body>
